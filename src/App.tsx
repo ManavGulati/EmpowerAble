@@ -1,12 +1,47 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
+import NGO from "./NGO";
+import Community from "./Community";
 
 export default function App() {
   const [open, setOpen] = useState(false);
   const [tab, setTab] = useState<"login" | "signup">("login");
   const [role, setRole] = useState("disabled");
 
+  const homeContent = (
+    <section className="relative z-10 flex flex-col items-center text-center px-6 pt-32 pb-40">
+      <h1
+        className="text-5xl sm:text-7xl md:text-8xl leading-[0.95] tracking-[-2px] max-w-6xl animate-fade-rise"
+        style={{ fontFamily: "'Instrument Serif', serif" }}
+      >
+        Empowering <em className="not-italic text-muted-foreground">abilities</em>{" "}
+        through connection, skills, and opportunity.
+      </h1>
+
+      <p className="text-muted-foreground text-base sm:text-lg max-w-2xl mt-8 leading-relaxed animate-fade-rise-delay">
+        A unified platform connecting persons with disabilities to NGOs,
+        skill development programs, and meaningful employment. Build
+        independence, community, and opportunity — all in one place.
+      </p>
+
+      <div className="flex flex-col sm:flex-row gap-4 mt-12 animate-fade-rise-delay-2">
+        <button className="liquid-glass rounded-full px-10 py-4 hover:scale-[1.03] transition">
+          Get Started
+        </button>
+
+        <Link
+          to="/ngo"
+          className="border border-border rounded-full px-10 py-4 hover:bg-white/10 transition"
+        >
+          Explore NGOs
+        </Link>
+      </div>
+    </section>
+  );
+
   return (
-    <div className="relative min-h-screen bg-background text-foreground overflow-hidden">
+    <BrowserRouter>
+      <div className="relative min-h-screen bg-background text-foreground overflow-hidden">
 
       {/* VIDEO BACKGROUND */}
       <video
@@ -31,19 +66,21 @@ export default function App() {
 
         {/* Nav Links */}
         <div className="hidden md:flex items-center gap-8">
-          <a className="text-sm text-foreground">Home</a>
-          <a className="text-sm text-muted-foreground hover:text-foreground transition">
+          <Link to="/" className="text-sm text-foreground hover:text-foreground transition">
+            Home
+          </Link>
+          <Link to="/ngo" className="text-sm text-muted-foreground hover:text-foreground transition">
             NGO Connect
-          </a>
-          <a className="text-sm text-muted-foreground hover:text-foreground transition">
+          </Link>
+          <span className="text-sm text-muted-foreground hover:text-foreground transition">
             Skill Hub
-          </a>
-          <a className="text-sm text-muted-foreground hover:text-foreground transition">
+          </span>
+          <Link to="/community" className="text-sm text-muted-foreground hover:text-foreground transition">
             Community
-          </a>
-          <a className="text-sm text-muted-foreground hover:text-foreground transition">
+          </Link>
+          <span className="text-sm text-muted-foreground hover:text-foreground transition">
             Marketplace
-          </a>
+          </span>
         </div>
 
         {/* Login Button */}
@@ -55,35 +92,11 @@ export default function App() {
         </button>
       </nav>
 
-      {/* HERO */}
-      <section className="relative z-10 flex flex-col items-center text-center px-6 pt-32 pb-40">
-
-        <h1
-          className="text-5xl sm:text-7xl md:text-8xl leading-[0.95] tracking-[-2px] max-w-6xl animate-fade-rise"
-          style={{ fontFamily: "'Instrument Serif', serif" }}
-        >
-          Empowering{" "}
-          <em className="not-italic text-muted-foreground">abilities</em>{" "}
-          through connection, skills, and opportunity.
-        </h1>
-
-        <p className="text-muted-foreground text-base sm:text-lg max-w-2xl mt-8 leading-relaxed animate-fade-rise-delay">
-          A unified platform connecting persons with disabilities to NGOs,
-          skill development programs, and meaningful employment. Build
-          independence, community, and opportunity — all in one place.
-        </p>
-
-        <div className="flex flex-col sm:flex-row gap-4 mt-12 animate-fade-rise-delay-2">
-          <button className="liquid-glass rounded-full px-10 py-4 hover:scale-[1.03] transition">
-            Get Started
-          </button>
-
-          <button className="border border-border rounded-full px-10 py-4 hover:bg-white/10 transition">
-            Explore NGOs
-          </button>
-        </div>
-
-      </section>
+      <Routes>
+        <Route path="/" element={homeContent} />
+        <Route path="/ngo" element={<NGO />} />
+        <Route path="/community" element={<Community />} />
+      </Routes>
 
       {/* LOGIN MODAL */}
       {open && (
@@ -209,5 +222,6 @@ export default function App() {
         </div>
       )}
     </div>
+    </BrowserRouter>
   );
 }
