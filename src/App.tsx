@@ -10,12 +10,217 @@ import {
 import NGO from "./NGO";
 import Community from "./Community";
 
+// ─── Dropdown data ───────────────────────────────────────────────────────────
+
+const NAV_DROPDOWNS: Record<string, {
+  icon: React.ReactNode;
+  label: string;
+  desc: string;
+  to?: string;
+}[]> = {
+  Jobs: [
+    {
+      icon: (
+        <svg className="w-4 h-4 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        </svg>
+      ),
+      label: "Browse Jobs",
+      desc: "Find roles suited for you",
+    },
+    {
+      icon: (
+        <svg className="w-4 h-4 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+      ),
+      label: "Post a Resume",
+      desc: "Let employers find you",
+    },
+    {
+      icon: (
+        <svg className="w-4 h-4 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+        </svg>
+      ),
+      label: "Hiring Process",
+      desc: "Hire people with desired skills",
+    },
+    // {
+    //   icon: (
+    //     <svg className="w-4 h-4 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+    //       <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+    //     </svg>
+    //   ),
+    //   label: "Grants & Stipends",
+    //   desc: "Financial support programs",
+    // },
+  ],
+
+  Learn: [
+    {
+      icon: (
+        <svg className="w-4 h-4 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+        </svg>
+      ),
+      label: "UpSkill Yourself",
+      desc: "Learn at your own pace",
+    },
+    {
+      icon: (
+        <svg className="w-4 h-4 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15 10l4.553-2.069A1 1 0 0121 8.868V15.13a1 1 0 01-1.447.894L15 14M3 8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z" />
+        </svg>
+      ),
+      label: "Workshops",
+      desc: "Online workshops for upskilling and learning",
+    },
+    // {
+    //   icon: (
+    //     <svg className="w-4 h-4 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+    //       <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+    //     </svg>
+    //   ),
+    //   label: "Certifications",
+    //   desc: "Earn verified credentials",
+    // },
+    {
+      icon: (
+        <svg className="w-4 h-4 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+      ),
+      label: "Mentorship",
+      desc: "Connect with a mentor",
+    },
+  ],
+
+  Marketplace: [
+    {
+      icon: (
+        <svg className="w-4 h-4 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+        </svg>
+      ),
+      label: "Shop Products",
+      desc: "Buy the products you like",
+    },
+    // {
+    //   icon: (
+    //     <svg className="w-4 h-4 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+    //       <path strokeLinecap="round" strokeLinejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+    //     </svg>
+    //   ),
+    //   label: "Top Rated",
+    //   desc: "Community favourites",
+    // },
+    {
+      icon: (
+        <svg className="w-4 h-4 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
+        </svg>
+      ),
+      label: "Sell Your Work",
+      desc: "List services or products",
+    },
+    // {
+    //   icon: (
+    //     <svg className="w-4 h-4 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+    //       <path strokeLinecap="round" strokeLinejoin="round" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z" />
+    //     </svg>
+    //   ),
+    //   label: "Deals & Offers",
+    //   desc: "Exclusive discounts for you",
+    // },
+  ],
+};
+
+// ─── Reusable Dropdown Panel ──────────────────────────────────────────────────
+
+function DropdownPanel({
+  items,
+  footerLabel,
+}: {
+  items: typeof NAV_DROPDOWNS[string];
+  footerLabel: string;
+}) {
+  return (
+    <div className="absolute left-1/2 -translate-x-1/2 top-full pt-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 group-hover:translate-y-0 translate-y-1 z-50">
+      <div
+        className="w-72 rounded-2xl p-[1px]"
+        style={{
+          background:
+            "linear-gradient(135deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0.1) 100%)",
+        }}
+      >
+        <div
+          className="rounded-2xl p-2 shadow-2xl"
+          style={{
+            background: "rgba(13, 13, 13, 0.95)",
+            backdropFilter: "blur(24px)",
+            WebkitBackdropFilter: "blur(24px)",
+          }}
+        >
+          <div className="px-3 pt-2 pb-3">
+            <p className="text-[10px] uppercase tracking-[0.15em] text-white/30 font-semibold">
+              Browse
+            </p>
+          </div>
+
+          <div className="flex flex-col gap-0.5">
+            {items.map((item, i) => (
+              <div
+                key={i}
+                className="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors duration-150 cursor-pointer"
+                style={{ background: "transparent" }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.background = "rgba(255,255,255,0.07)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.background = "transparent")
+                }
+              >
+                <div
+                  className="flex items-center justify-center w-8 h-8 rounded-lg shrink-0"
+                  style={{ background: "rgba(255,255,255,0.07)" }}
+                >
+                  {item.icon}
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-white/90 leading-tight">
+                    {item.label}
+                  </p>
+                  <p className="text-xs text-white/40 mt-0.5">{item.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="px-3 pt-3 pb-2">
+            <div
+              className="w-full rounded-xl px-3 py-2.5 text-center text-xs font-medium text-white/60 hover:text-white/90 transition-colors cursor-pointer"
+              style={{ background: "rgba(255,255,255,0.05)" }}
+            >
+              {footerLabel}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Layout ───────────────────────────────────────────────────────────────────
+
 function Layout() {
   const [open, setOpen] = useState(false);
   const [tab, setTab] = useState("login");
   const [role, setRole] = useState("disabled");
 
   const location = useLocation();
+  const isDarkPage =
+    location.pathname === "/community" || location.pathname === "/ngo";
 
   const homeContent = (
     <section className="relative z-10 flex flex-col items-center text-center px-6 pt-32 pb-40">
@@ -29,15 +234,14 @@ function Layout() {
       </h1>
 
       <p className="text-muted-foreground text-base sm:text-lg max-w-2xl mt-8">
-        A unified platform connecting persons with disabilities to NGOs,
-        skill development programs, and meaningful employment.
+        A unified platform connecting persons with disabilities to NGOs, skill
+        development programs, and meaningful employment.
       </p>
 
       <div className="flex flex-col sm:flex-row gap-4 mt-12">
         <button className="liquid-glass rounded-full px-10 py-4">
           Get Started
         </button>
-
         <Link
           to="/ngo"
           className="border border-border rounded-full px-10 py-4 hover:bg-white/10 transition"
@@ -49,19 +253,23 @@ function Layout() {
   );
 
   return (
-    <div className="relative min-h-screen bg-background text-foreground overflow-hidden">
-
+    <div
+      className="relative min-h-screen text-foreground overflow-hidden"
+      style={{ background: "#0d0d0d" }}
+    >
       {/* VIDEO */}
-      <video
-        autoPlay
-        loop
-        muted
-        playsInline
-        className="absolute inset-0 w-full h-full object-cover z-0"
-        src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260314_131748_f2ca2a28-fed7-44c8-b9a9-bd9acdd5ec31.mp4"
-      />
+      {!isDarkPage && (
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover z-0"
+          src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260314_131748_f2ca2a28-fed7-44c8-b9a9-bd9acdd5ec31.mp4"
+        />
+      )}
 
-      {/* NAVBAR — z-20 so dropdown always floats above page content */}
+      {/* NAVBAR */}
       <nav className="relative z-20 flex items-center justify-between px-8 py-6 max-w-7xl mx-auto">
 
         {/* Logo */}
@@ -75,7 +283,7 @@ function Layout() {
         {/* Nav Links */}
         <div className="hidden md:flex items-center gap-10 text-[15px] font-medium">
 
-          {/* Home */}
+          {/* Home — no dropdown */}
           <NavLink
             to="/"
             className={({ isActive }) =>
@@ -87,10 +295,8 @@ function Layout() {
             Home
           </NavLink>
 
-          {/* Explore Dropdown */}
+          {/* Explore */}
           <div className="relative group">
-
-            {/* Trigger */}
             <div className="flex items-center gap-1.5 cursor-pointer text-muted-foreground hover:text-foreground transition-colors duration-200 py-2 select-none">
               <span>Explore</span>
               <svg
@@ -104,27 +310,21 @@ function Layout() {
               </svg>
             </div>
 
-            {/* Dropdown */}
             <div className="absolute left-1/2 -translate-x-1/2 top-full pt-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 group-hover:translate-y-0 translate-y-1 z-50">
-
-              {/* Outer glow border */}
               <div
                 className="w-72 rounded-2xl p-[1px]"
                 style={{
-                  background: "linear-gradient(135deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0.1) 100%)"
+                  background: "linear-gradient(135deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0.1) 100%)",
                 }}
               >
-                {/* Glass panel */}
                 <div
                   className="rounded-2xl p-2 shadow-2xl"
                   style={{
-                    background: "rgba(10, 10, 15, 0.75)",
+                    background: "rgba(13, 13, 13, 0.95)",
                     backdropFilter: "blur(24px)",
                     WebkitBackdropFilter: "blur(24px)",
                   }}
                 >
-
-                  {/* Header label */}
                   <div className="px-3 pt-2 pb-3">
                     <p className="text-[10px] uppercase tracking-[0.15em] text-white/30 font-semibold">
                       Browse
@@ -132,19 +332,14 @@ function Layout() {
                   </div>
 
                   <div className="flex flex-col gap-0.5">
-
-                    {/* NGOs */}
                     <Link
                       to="/ngo"
-                      className="group/item flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors duration-150"
+                      className="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors duration-150"
                       style={{ background: "transparent" }}
-                      onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.07)"}
-                      onMouseLeave={e => e.currentTarget.style.background = "transparent"}
+                      onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.07)")}
+                      onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
                     >
-                      <div
-                        className="flex items-center justify-center w-8 h-8 rounded-lg shrink-0"
-                        style={{ background: "rgba(255,255,255,0.07)" }}
-                      >
+                      <div className="flex items-center justify-center w-8 h-8 rounded-lg shrink-0" style={{ background: "rgba(255,255,255,0.07)" }}>
                         <svg className="w-4 h-4 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
                         </svg>
@@ -155,17 +350,13 @@ function Layout() {
                       </div>
                     </Link>
 
-                    {/* Support Services */}
                     <div
                       className="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors duration-150 cursor-pointer"
                       style={{ background: "transparent" }}
-                      onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.07)"}
-                      onMouseLeave={e => e.currentTarget.style.background = "transparent"}
+                      onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.07)")}
+                      onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
                     >
-                      <div
-                        className="flex items-center justify-center w-8 h-8 rounded-lg shrink-0"
-                        style={{ background: "rgba(255,255,255,0.07)" }}
-                      >
+                      <div className="flex items-center justify-center w-8 h-8 rounded-lg shrink-0" style={{ background: "rgba(255,255,255,0.07)" }}>
                         <svg className="w-4 h-4 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                         </svg>
@@ -176,17 +367,13 @@ function Layout() {
                       </div>
                     </div>
 
-                    {/* Accessibility Help */}
                     <div
                       className="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors duration-150 cursor-pointer"
                       style={{ background: "transparent" }}
-                      onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.07)"}
-                      onMouseLeave={e => e.currentTarget.style.background = "transparent"}
+                      onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.07)")}
+                      onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
                     >
-                      <div
-                        className="flex items-center justify-center w-8 h-8 rounded-lg shrink-0"
-                        style={{ background: "rgba(255,255,255,0.07)" }}
-                      >
+                      <div className="flex items-center justify-center w-8 h-8 rounded-lg shrink-0" style={{ background: "rgba(255,255,255,0.07)" }}>
                         <svg className="w-4 h-4 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
                         </svg>
@@ -197,23 +384,15 @@ function Layout() {
                       </div>
                     </div>
 
-                    {/* Divider */}
-                    <div
-                      className="mx-3 my-1.5 h-px"
-                      style={{ background: "rgba(255,255,255,0.07)" }}
-                    />
+                    <div className="mx-3 my-1.5 h-px" style={{ background: "rgba(255,255,255,0.07)" }} />
 
-                    {/* Opportunities */}
                     <div
                       className="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors duration-150 cursor-pointer"
                       style={{ background: "transparent" }}
-                      onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.07)"}
-                      onMouseLeave={e => e.currentTarget.style.background = "transparent"}
+                      onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.07)")}
+                      onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
                     >
-                      <div
-                        className="flex items-center justify-center w-8 h-8 rounded-lg shrink-0"
-                        style={{ background: "rgba(255,255,255,0.07)" }}
-                      >
+                      <div className="flex items-center justify-center w-8 h-8 rounded-lg shrink-0" style={{ background: "rgba(255,255,255,0.07)" }}>
                         <svg className="w-4 h-4 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                         </svg>
@@ -223,36 +402,50 @@ function Layout() {
                         <p className="text-xs text-white/40 mt-0.5">Jobs, grants & programs</p>
                       </div>
                     </div>
-
                   </div>
 
-                  {/* Footer CTA */}
                   <div className="px-3 pt-3 pb-2">
                     <div
                       className="w-full rounded-xl px-3 py-2.5 text-center text-xs font-medium text-white/60 hover:text-white/90 transition-colors cursor-pointer"
                       style={{ background: "rgba(255,255,255,0.05)" }}
                     >
-                      View all resources →
+                      View all resources
                     </div>
                   </div>
-
                 </div>
               </div>
-
             </div>
           </div>
 
           {/* Jobs */}
-          <span className="text-muted-foreground hover:text-foreground cursor-pointer transition-colors duration-200">
-            Jobs
-          </span>
+          <div className="relative group">
+            <div className="flex items-center gap-1.5 cursor-pointer text-muted-foreground hover:text-foreground transition-colors duration-200 py-2 select-none">
+              <span>Jobs</span>
+              <svg
+                className="w-3.5 h-3.5 transition-transform duration-300 group-hover:rotate-180"
+                fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+            <DropdownPanel items={NAV_DROPDOWNS.Jobs} footerLabel="Browse all jobs" />
+          </div>
 
           {/* Learn */}
-          <span className="text-muted-foreground hover:text-foreground cursor-pointer transition-colors duration-200">
-            Learn
-          </span>
+          <div className="relative group">
+            <div className="flex items-center gap-1.5 cursor-pointer text-muted-foreground hover:text-foreground transition-colors duration-200 py-2 select-none">
+              <span>Learn</span>
+              <svg
+                className="w-3.5 h-3.5 transition-transform duration-300 group-hover:rotate-180"
+                fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+            <DropdownPanel items={NAV_DROPDOWNS.Learn} footerLabel="View all courses" />
+          </div>
 
-          {/* Community */}
+          {/* Community — no dropdown */}
           <NavLink
             to="/community"
             className={({ isActive }) =>
@@ -265,9 +458,18 @@ function Layout() {
           </NavLink>
 
           {/* Marketplace */}
-          <span className="text-muted-foreground hover:text-foreground cursor-pointer transition-colors duration-200">
-            Marketplace
-          </span>
+          <div className="relative group">
+            <div className="flex items-center gap-1.5 cursor-pointer text-muted-foreground hover:text-foreground transition-colors duration-200 py-2 select-none">
+              <span>Marketplace</span>
+              <svg
+                className="w-3.5 h-3.5 transition-transform duration-300 group-hover:rotate-180"
+                fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+            <DropdownPanel items={NAV_DROPDOWNS.Marketplace} footerLabel="Go to marketplace" />
+          </div>
 
         </div>
 
@@ -290,14 +492,13 @@ function Layout() {
       {/* LOGIN MODAL */}
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-
           <div className="relative w-full max-w-md p-8 rounded-3xl liquid-glass border border-white/10 shadow-2xl">
 
             <button
               onClick={() => setOpen(false)}
               className="absolute top-4 right-5 text-muted-foreground"
             >
-              ✕
+              {"\u2715"}
             </button>
 
             <h2
@@ -310,18 +511,13 @@ function Layout() {
             <div className="flex bg-white/5 rounded-full p-1 mb-6">
               <button
                 onClick={() => setTab("login")}
-                className={`flex-1 py-2 rounded-full ${
-                  tab === "login" ? "bg-white text-black" : "text-muted-foreground"
-                }`}
+                className={`flex-1 py-2 rounded-full ${tab === "login" ? "bg-white text-black" : "text-muted-foreground"}`}
               >
                 Login
               </button>
-
               <button
                 onClick={() => setTab("signup")}
-                className={`flex-1 py-2 rounded-full ${
-                  tab === "signup" ? "bg-white text-black" : "text-muted-foreground"
-                }`}
+                className={`flex-1 py-2 rounded-full ${tab === "signup" ? "bg-white text-black" : "text-muted-foreground"}`}
               >
                 Sign Up
               </button>
@@ -332,11 +528,7 @@ function Layout() {
                 <button
                   key={r}
                   onClick={() => setRole(r)}
-                  className={`py-2 rounded-xl text-xs ${
-                    role === r
-                      ? "bg-white text-black"
-                      : "bg-white/5 text-muted-foreground"
-                  }`}
+                  className={`py-2 rounded-xl text-xs ${role === r ? "bg-white text-black" : "bg-white/5 text-muted-foreground"}`}
                 >
                   {r === "disabled" ? "Disabled" : r === "ngo" ? "NGO" : "Company"}
                 </button>
@@ -349,13 +541,11 @@ function Layout() {
                 placeholder="Email"
                 className="px-4 py-3 rounded-xl bg-white/5 border border-white/10"
               />
-
               <input
                 type="password"
                 placeholder="Password"
                 className="px-4 py-3 rounded-xl bg-white/5 border border-white/10"
               />
-
               {tab === "signup" && (
                 <input
                   type="text"
@@ -363,7 +553,6 @@ function Layout() {
                   className="px-4 py-3 rounded-xl bg-white/5 border border-white/10"
                 />
               )}
-
               <button className="liquid-glass py-3 rounded-full">
                 {tab === "login" ? "Login" : "Create Account"}
               </button>

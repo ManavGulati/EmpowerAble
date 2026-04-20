@@ -428,4 +428,4 @@ export default function CommunitySection() {
       </section>
     </div>
   );
-}
+} 
