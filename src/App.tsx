@@ -11,7 +11,7 @@ import NGO from "./NGO";
 import Community from "./Community";
 import Upskill from "./Upskill";
 import ShopProducts from "./Shop_Products";
-
+import SellProducts from "./Sell_products";
 // ─── Dropdown data ───────────────────────────────────────────────────────────
 
 const NAV_DROPDOWNS: Record<string, {
@@ -127,6 +127,7 @@ const NAV_DROPDOWNS: Record<string, {
       ),
       label: "Sell Your Work",
       desc: "List services or products",
+      to:"/sell-products",
     },
     // {
     //   icon: (
@@ -252,7 +253,7 @@ function Layout() {
 
   const location = useLocation();
   const isDarkPage =
-    location.pathname === "/community" || location.pathname === "/ngo";
+    location.pathname === "/community" || location.pathname === "/ngo"||location.pathname === "/shop-products"||location.pathname==="/upskill"||location.pathname==="/sell-products";
 
   const homeContent = (
     <section className="relative z-10 flex flex-col items-center text-center px-6 pt-32 pb-40">
@@ -521,6 +522,7 @@ function Layout() {
         <Route path="/community" element={<Community />} />
         <Route path="/upskill" element={<Upskill />} />
         <Route path="/shop-products" element={<ShopProducts />} />
+        <Route path="/sell-products" element={<SellProducts />} />
       </Routes>
 
       {/* LOGIN MODAL */}
