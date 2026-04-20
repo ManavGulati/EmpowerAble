@@ -9,6 +9,8 @@ import {
 } from "react-router-dom";
 import NGO from "./NGO";
 import Community from "./Community";
+import Upskill from "./Upskill";
+import ShopProducts from "./Shop_Products";
 
 // ─── Dropdown data ───────────────────────────────────────────────────────────
 
@@ -66,6 +68,7 @@ const NAV_DROPDOWNS: Record<string, {
       ),
       label: "UpSkill Yourself",
       desc: "Learn at your own pace",
+      to: "/upskill",
     },
     {
       icon: (
@@ -105,6 +108,7 @@ const NAV_DROPDOWNS: Record<string, {
       ),
       label: "Shop Products",
       desc: "Buy the products you like",
+      to: "/shop-products",
     },
     // {
     //   icon: (
@@ -170,30 +174,58 @@ function DropdownPanel({
 
           <div className="flex flex-col gap-0.5">
             {items.map((item, i) => (
-              <div
-                key={i}
-                className="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors duration-150 cursor-pointer"
-                style={{ background: "transparent" }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.background = "rgba(255,255,255,0.07)")
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.background = "transparent")
-                }
-              >
-                <div
-                  className="flex items-center justify-center w-8 h-8 rounded-lg shrink-0"
-                  style={{ background: "rgba(255,255,255,0.07)" }}
+              item.to ? (
+                <Link
+                  key={i}
+                  to={item.to}
+                  className="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors duration-150"
+                  style={{ background: "transparent" }}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.background = "rgba(255,255,255,0.07)")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.background = "transparent")
+                  }
                 >
-                  {item.icon}
+                  <div
+                    className="flex items-center justify-center w-8 h-8 rounded-lg shrink-0"
+                    style={{ background: "rgba(255,255,255,0.07)" }}
+                  >
+                    {item.icon}
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-white/90 leading-tight">
+                      {item.label}
+                    </p>
+                    <p className="text-xs text-white/40 mt-0.5">{item.desc}</p>
+                  </div>
+                </Link>
+              ) : (
+                <div
+                  key={i}
+                  className="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors duration-150 cursor-pointer"
+                  style={{ background: "transparent" }}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.background = "rgba(255,255,255,0.07)")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.background = "transparent")
+                  }
+                >
+                  <div
+                    className="flex items-center justify-center w-8 h-8 rounded-lg shrink-0"
+                    style={{ background: "rgba(255,255,255,0.07)" }}
+                  >
+                    {item.icon}
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-white/90 leading-tight">
+                      {item.label}
+                    </p>
+                    <p className="text-xs text-white/40 mt-0.5">{item.desc}</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-sm font-medium text-white/90 leading-tight">
-                    {item.label}
-                  </p>
-                  <p className="text-xs text-white/40 mt-0.5">{item.desc}</p>
-                </div>
-              </div>
+              )
             ))}
           </div>
 
@@ -487,6 +519,8 @@ function Layout() {
         <Route path="/" element={homeContent} />
         <Route path="/ngo" element={<NGO />} />
         <Route path="/community" element={<Community />} />
+        <Route path="/upskill" element={<Upskill />} />
+        <Route path="/shop-products" element={<ShopProducts />} />
       </Routes>
 
       {/* LOGIN MODAL */}
@@ -596,3 +630,4 @@ export default function App() {
     </BrowserRouter>
   );
 }
+
