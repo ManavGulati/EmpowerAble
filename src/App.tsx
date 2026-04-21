@@ -12,6 +12,8 @@ import Community from "./Community";
 import Upskill from "./Upskill";
 import ShopProducts from "./Shop_Products";
 import SellProducts from "./Sell_products";
+import Jobs from "./Browse_Jobs";
+import PostResume from "./Post_Resume";
 // ─── Dropdown data ───────────────────────────────────────────────────────────
 
 const NAV_DROPDOWNS: Record<string, {
@@ -29,6 +31,7 @@ const NAV_DROPDOWNS: Record<string, {
       ),
       label: "Browse Jobs",
       desc: "Find roles suited for you",
+      to: "/jobs",
     },
     {
       icon: (
@@ -38,6 +41,7 @@ const NAV_DROPDOWNS: Record<string, {
       ),
       label: "Post a Resume",
       desc: "Let employers find you",
+      to: "/resume",
     },
     {
       icon: (
@@ -253,7 +257,7 @@ function Layout() {
 
   const location = useLocation();
   const isDarkPage =
-    location.pathname === "/community" || location.pathname === "/ngo"||location.pathname === "/shop-products"||location.pathname==="/upskill"||location.pathname==="/sell-products";
+    location.pathname === "/community" || location.pathname === "/ngo"||location.pathname === "/shop-products"||location.pathname==="/upskill"||location.pathname==="/sell-products"||location.pathname==="/jobs"||location.pathname==="/resume";
 
   const homeContent = (
     <section className="relative z-10 flex flex-col items-center text-center px-6 pt-32 pb-40">
@@ -523,6 +527,8 @@ function Layout() {
         <Route path="/upskill" element={<Upskill />} />
         <Route path="/shop-products" element={<ShopProducts />} />
         <Route path="/sell-products" element={<SellProducts />} />
+        <Route path="/jobs" element={<Jobs/>} />
+        <Route path="/resume" element={<PostResume/>} />
       </Routes>
 
       {/* LOGIN MODAL */}
