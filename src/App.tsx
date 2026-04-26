@@ -15,6 +15,8 @@ import SellProducts from "./Sell_products";
 import Jobs from "./Browse_Jobs";
 import PostResume from "./Post_Resume";
 import ChatBotWidget from "./ChatbotWidget";
+import MentorshipPage from "./mentorship";
+import NewsSchemesPage from "./updates&schemes";
 
 // ─── Dropdown data ───────────────────────────────────────────────────────────
 
@@ -84,6 +86,7 @@ const NAV_DROPDOWNS: Record<string, {
       ),
       label: "Mentorship",
       desc: "Connect with a mentor",
+      to: "/mentorship",
     },
   ],
 
@@ -229,7 +232,9 @@ function Layout() {
     location.pathname === "/upskill" ||
     location.pathname === "/sell-products" ||
     location.pathname === "/jobs" ||
-    location.pathname === "/resume";
+    location.pathname === "/resume" ||
+    location.pathname === "/mentorship" ||
+    location.pathname === "/updates-schemes";
 
   const homeContent = (
     <section className="relative z-10 flex flex-col items-center text-center px-6 pt-32 pb-40">
@@ -367,8 +372,9 @@ function Layout() {
                       </div>
                     </Link>
 
-                    <div
-                      className="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors duration-150 cursor-pointer"
+                    <Link
+                      to="/updates-schemes"
+                      className="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors duration-150"
                       style={{ background: "transparent" }}
                       onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.07)")}
                       onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
@@ -379,10 +385,10 @@ function Layout() {
                         </svg>
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-white/90 leading-tight">Support Services</p>
-                        <p className="text-xs text-white/40 mt-0.5">Access care & assistance</p>
+                        <p className="text-sm font-medium text-white/90 leading-tight">Updates & Schemes</p>
+                        <p className="text-xs text-white/40 mt-0.5">News & government benefits</p>
                       </div>
-                    </div>
+                    </Link>
 
                     <div
                       className="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors duration-150 cursor-pointer"
@@ -512,6 +518,8 @@ function Layout() {
         <Route path="/sell-products" element={<SellProducts />} />
         <Route path="/jobs" element={<Jobs />} />
         <Route path="/resume" element={<PostResume />} />
+        <Route path="/mentorship" element={<MentorshipPage />} />
+        <Route path="/updates-schemes" element={<NewsSchemesPage />} />
       </Routes>
 
       {/* LOGIN MODAL */}
