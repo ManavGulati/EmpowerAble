@@ -127,10 +127,10 @@ export default function ChatbotWidget() {
         <div style={styles.header}>
           <div style={styles.avatar}>🌿</div>
           <div style={{ flex: 1 }}>
-            <div style={styles.headerName}>Wellness Guide</div>
+            <div style={styles.headerName}>Asha</div>
             <div style={styles.headerStatus}>
               <span style={styles.statusDot} />
-              Active Listener
+              Your Wellness Guide
             </div>
           </div>
           <button style={styles.closeBtn} onClick={() => setIsOpen(false)}>✕</button>

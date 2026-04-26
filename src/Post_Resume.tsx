@@ -55,7 +55,7 @@ const AI_CHECKS = [
   { id: "complete",   label: "Generating recommendations",           dur: 600  },
 ];
 
-/* ─── AI RECOMMENDATIONS (mock – deterministic from profile data) ─── */
+/* ─── AI RECOMMENDATIONS ─── */
 function buildRecs(merged) {
   const recs = [];
   if (!merged.bio || merged.bio.length < 60)
@@ -70,8 +70,7 @@ function buildRecs(merged) {
     recs.push({ type: "tip",     icon: "◇", title: "Add Expected Salary",        body: "Profiles with a salary range get prioritised in employer searches. It also helps ensure you're not matched to underpaying roles.", field: "Preferences" });
   if ((merged.accommodations || []).length === 0)
     recs.push({ type: "tip",     icon: "♿", title: "Specify Accommodations",     body: "Let employers know what you need — screen reader, flexible hours, wheelchair access. This ensures only the right roles reach you.", field: "Disability Info" });
-  // Always add one positive
-  recs.push({ type: "success", icon: "✓", title: "Profile Looks Good",          body: "Your contact info and location are complete. Recruiters can reach you directly. Keep your phone notifications on!", field: "Personal Info" });
+  recs.push({ type: "success", icon: "✓", title: "Profile Looks Good", body: "Your contact info and location are complete. Recruiters can reach you directly. Keep your phone notifications on!", field: "Personal Info" });
   return recs;
 }
 
@@ -86,7 +85,7 @@ function Label({ children }) {
   );
 }
 
-function Input({ placeholder, value, onChange, type = "text" }) {
+function FInput({ placeholder, value, onChange, type = "text" }) {
   const [focus, setFocus] = useState(false);
   return (
     <input type={type} placeholder={placeholder} value={value} onChange={onChange}
@@ -99,7 +98,7 @@ function Input({ placeholder, value, onChange, type = "text" }) {
   );
 }
 
-function Select({ value, onChange, options, placeholder }) {
+function FSelect({ value, onChange, options, placeholder }) {
   const [focus, setFocus] = useState(false);
   return (
     <select value={value} onChange={onChange}
@@ -187,20 +186,20 @@ function Step1({ data, setData }) {
     <div>
       <SectionHeading icon="◈" accent="#4f46e5">Personal Information</SectionHeading>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 20 }}>
-        <div><Label>First Name (required)</Label><Input placeholder="Priya" value={data.firstName} onChange={e => set("firstName", e.target.value)} /></div>
-        <div><Label>Last Name (required)</Label><Input placeholder="Sharma" value={data.lastName} onChange={e => set("lastName", e.target.value)} /></div>
+        <div><Label>First Name (required)</Label><FInput placeholder="Priya" value={data.firstName} onChange={e => set("firstName", e.target.value)} /></div>
+        <div><Label>Last Name (required)</Label><FInput placeholder="Sharma" value={data.lastName} onChange={e => set("lastName", e.target.value)} /></div>
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 20 }}>
-        <div><Label>Email Address (required)</Label><Input placeholder="priya@email.com" type="email" value={data.email} onChange={e => set("email", e.target.value)} /></div>
-        <div><Label>Phone Number (required)</Label><Input placeholder="+91 98765 43210" type="tel" value={data.phone} onChange={e => set("phone", e.target.value)} /></div>
+        <div><Label>Email Address (required)</Label><FInput placeholder="priya@email.com" type="email" value={data.email} onChange={e => set("email", e.target.value)} /></div>
+        <div><Label>Phone Number (required)</Label><FInput placeholder="+91 98765 43210" type="tel" value={data.phone} onChange={e => set("phone", e.target.value)} /></div>
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 20 }}>
-        <div><Label>City / Location (required)</Label><Select placeholder="Select city" value={data.city} onChange={e => set("city", e.target.value)} options={LOCATIONS} /></div>
-        <div><Label>Experience Level (required)</Label><Select placeholder="Select experience" value={data.exp} onChange={e => set("exp", e.target.value)} options={EXP_LEVELS} /></div>
+        <div><Label>City / Location (required)</Label><FSelect placeholder="Select city" value={data.city} onChange={e => set("city", e.target.value)} options={LOCATIONS} /></div>
+        <div><Label>Experience Level (required)</Label><FSelect placeholder="Select experience" value={data.exp} onChange={e => set("exp", e.target.value)} options={EXP_LEVELS} /></div>
       </div>
       <div style={{ marginBottom: 20 }}>
         <Label>Current / Desired Job Title</Label>
-        <Input placeholder="e.g. Data Entry Executive, Software Tester" value={data.jobTitle} onChange={e => set("jobTitle", e.target.value)} />
+        <FInput placeholder="e.g. Data Entry Executive, Software Tester" value={data.jobTitle} onChange={e => set("jobTitle", e.target.value)} />
       </div>
       <div>
         <Label>Short Bio (optional)</Label>
@@ -224,7 +223,7 @@ function Step2({ data, setData }) {
     const t = custom.trim();
     if (t && !data.skills.includes(t)) { setData(p => ({ ...p, skills: [...p.skills, t] })); setCustom(""); }
   };
-  const ACCENT_MAP = { "Python":"#4f46e5","SQL":"#0891b2","Java":"#be123c","Power BI":"#0f766e","SAP":"#6d28d9","Salesforce CRM":"#0891b2","WCAG / Accessibility":"#4f46e5" };
+  const ACCENT_MAP = { "Python": "#4f46e5", "SQL": "#0891b2", "Java": "#be123c", "Power BI": "#0f766e", "SAP": "#6d28d9", "Salesforce CRM": "#0891b2", "WCAG / Accessibility": "#4f46e5" };
   return (
     <div>
       <SectionHeading icon="⬡" accent="#0891b2">Skills & Expertise</SectionHeading>
@@ -243,9 +242,9 @@ function Step2({ data, setData }) {
               background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff", outline: "none" }} />
           <button onClick={addCustom}
             style={{ padding: "12px 22px", borderRadius: 10, fontSize: 13, fontWeight: 800, fontFamily: "system-ui,sans-serif",
-              cursor: "pointer", background: "rgba(124,58,237,0.2)", border: "1px solid rgba(124,58,237,0.4)", color: "#a78bfa", transition: "all 0.18s" }}
-            onMouseEnter={e => e.currentTarget.style.background="rgba(124,58,237,0.35)"}
-            onMouseLeave={e => e.currentTarget.style.background="rgba(124,58,237,0.2)"}>+ Add</button>
+              cursor: "pointer", background: "rgba(124,58,237,0.2)", border: "1px solid rgba(124,58,237,0.4)", color: "#a78bfa", transition: "all 0.18s" }}>
+            + Add
+          </button>
         </div>
       </div>
       {data.skills.length > 0 && (
@@ -285,7 +284,7 @@ function Step3({ data, setData }) {
       </div>
       <div style={{ marginBottom: 24 }}>
         <Label>Disability Certificate Number (optional)</Label>
-        <Input placeholder="e.g. UDID-XX-XXXXX-XXXX" value={data.udid} onChange={e => set("udid", e.target.value)} />
+        <FInput placeholder="e.g. UDID-XX-XXXXX-XXXX" value={data.udid} onChange={e => set("udid", e.target.value)} />
         <div style={{ fontSize: 11, color: "rgba(255,255,255,0.28)", fontFamily: "system-ui,sans-serif", marginTop: 6 }}>
           Providing UDID helps employers verify eligibility for reserved-category roles.
         </div>
@@ -301,9 +300,9 @@ function Step3({ data, setData }) {
       <div style={{ marginBottom: 24 }}>
         <Label>Workplace Accommodations Needed (optional)</Label>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
-          {["Screen Reader Software","Sign Language Interpreter","Wheelchair Access","Flexible Work Hours","Remote / WFH","Ergonomic Setup","None Required"].map(a => (
-            <ToggleChip key={a} label={a} selected={(data.accommodations||[]).includes(a)}
-              onClick={() => setData(p => ({ ...p, accommodations: (p.accommodations||[]).includes(a) ? (p.accommodations||[]).filter(x=>x!==a) : [...(p.accommodations||[]),a] }))}
+          {["Screen Reader Software", "Sign Language Interpreter", "Wheelchair Access", "Flexible Work Hours", "Remote / WFH", "Ergonomic Setup", "None Required"].map(a => (
+            <ToggleChip key={a} label={a} selected={(data.accommodations || []).includes(a)}
+              onClick={() => setData(p => ({ ...p, accommodations: (p.accommodations || []).includes(a) ? (p.accommodations || []).filter(x => x !== a) : [...(p.accommodations || []), a] }))}
               accent="#0891b2" />
           ))}
         </div>
@@ -314,37 +313,37 @@ function Step3({ data, setData }) {
 
 function Step4({ data, setData }) {
   const set = (k, v) => setData(p => ({ ...p, [k]: v }));
-  const toggleArr = (k, v) => setData(p => ({ ...p, [k]: (p[k]||[]).includes(v) ? (p[k]||[]).filter(x=>x!==v) : [...(p[k]||[]),v] }));
+  const toggleArr = (k, v) => setData(p => ({ ...p, [k]: (p[k] || []).includes(v) ? (p[k] || []).filter(x => x !== v) : [...(p[k] || []), v] }));
   return (
     <div>
       <SectionHeading icon="◉" accent="#be123c">Job Preferences</SectionHeading>
       <div style={{ marginBottom: 28 }}>
         <Label>Preferred Work Mode</Label>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
-          {WORK_MODES.map(m => <ToggleChip key={m} label={m} selected={(data.workModes||[]).includes(m)} onClick={() => toggleArr("workModes", m)} accent="#be123c" />)}
+          {WORK_MODES.map(m => <ToggleChip key={m} label={m} selected={(data.workModes || []).includes(m)} onClick={() => toggleArr("workModes", m)} accent="#be123c" />)}
         </div>
       </div>
       <div style={{ marginBottom: 28 }}>
         <Label>Job Type</Label>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
-          {JOB_TYPES.map(t => <ToggleChip key={t} label={t} selected={(data.jobTypes||[]).includes(t)} onClick={() => toggleArr("jobTypes", t)} accent="#6d28d9" />)}
+          {JOB_TYPES.map(t => <ToggleChip key={t} label={t} selected={(data.jobTypes || []).includes(t)} onClick={() => toggleArr("jobTypes", t)} accent="#6d28d9" />)}
         </div>
       </div>
       <div style={{ marginBottom: 28 }}>
         <Label>Preferred Job Categories</Label>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
-          {CATEGORIES.map(c => <ToggleChip key={c} label={c} selected={(data.categories||[]).includes(c)} onClick={() => toggleArr("categories", c)} accent="#0891b2" />)}
+          {CATEGORIES.map(c => <ToggleChip key={c} label={c} selected={(data.categories || []).includes(c)} onClick={() => toggleArr("categories", c)} accent="#0891b2" />)}
         </div>
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 28 }}>
-        <div><Label>Preferred Location</Label><Select placeholder="Select location" value={data.prefLocation} onChange={e => set("prefLocation", e.target.value)} options={LOCATIONS} /></div>
-        <div><Label>Expected Salary (LPA)</Label><Select placeholder="Select range" value={data.salary} onChange={e => set("salary", e.target.value)} options={["Below ₹2 LPA","₹2–4 LPA","₹4–6 LPA","₹6–9 LPA","₹9–12 LPA","₹12+ LPA"]} /></div>
+        <div><Label>Preferred Location</Label><FSelect placeholder="Select location" value={data.prefLocation} onChange={e => set("prefLocation", e.target.value)} options={LOCATIONS} /></div>
+        <div><Label>Expected Salary (LPA)</Label><FSelect placeholder="Select range" value={data.salary} onChange={e => set("salary", e.target.value)} options={["Below ₹2 LPA", "₹2–4 LPA", "₹4–6 LPA", "₹6–9 LPA", "₹9–12 LPA", "₹12+ LPA"]} /></div>
       </div>
       <div>
         <Label>Open to Immediate Joining?</Label>
         <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-          {["Yes — immediately","Within 15 days","Within 30 days","Need 60+ days"].map(o => (
-            <ToggleChip key={o} label={o} selected={data.joining===o} onClick={() => set("joining", o)} accent="#0f766e" />
+          {["Yes — immediately", "Within 15 days", "Within 30 days", "Need 60+ days"].map(o => (
+            <ToggleChip key={o} label={o} selected={data.joining === o} onClick={() => set("joining", o)} accent="#0f766e" />
           ))}
         </div>
       </div>
@@ -358,49 +357,49 @@ function Step5({ pdata }) {
   const fileRef = useRef();
   const handleDrop = e => { e.preventDefault(); setDragging(false); const f = e.dataTransfer.files[0]; if (f) setFile(f); };
   const rows = [
-    { label:"Name",       value:`${pdata.firstName||"—"} ${pdata.lastName||""}`.trim()||"—" },
-    { label:"Email",      value:pdata.email||"—" },
-    { label:"Phone",      value:pdata.phone||"—" },
-    { label:"Location",   value:pdata.city||"—" },
-    { label:"Experience", value:pdata.exp||"—" },
-    { label:"Job Title",  value:pdata.jobTitle||"—" },
-    { label:"Skills",     value:(pdata.skills||[]).length>0?`${pdata.skills.length} selected`:"—" },
-    { label:"Disability", value:pdata.disabilityType||"—" },
-    { label:"Work Mode",  value:(pdata.workModes||[]).join(", ")||"—" },
-    { label:"Salary",     value:pdata.salary||"—" },
+    { label: "Name",       value: `${pdata.firstName || "—"} ${pdata.lastName || ""}`.trim() || "—" },
+    { label: "Email",      value: pdata.email || "—" },
+    { label: "Phone",      value: pdata.phone || "—" },
+    { label: "Location",   value: pdata.city || "—" },
+    { label: "Experience", value: pdata.exp || "—" },
+    { label: "Job Title",  value: pdata.jobTitle || "—" },
+    { label: "Skills",     value: (pdata.skills || []).length > 0 ? `${pdata.skills.length} selected` : "—" },
+    { label: "Disability", value: pdata.disabilityType || "—" },
+    { label: "Work Mode",  value: (pdata.workModes || []).join(", ") || "—" },
+    { label: "Salary",     value: pdata.salary || "—" },
   ];
   return (
     <div>
       <SectionHeading icon="★" accent="#f59e0b">Upload Resume & Review</SectionHeading>
-      <div onDragOver={e=>{e.preventDefault();setDragging(true);}} onDragLeave={()=>setDragging(false)} onDrop={handleDrop}
-        onClick={()=>fileRef.current.click()}
-        style={{ borderRadius:16, padding:"36px 24px", textAlign:"center", cursor:"pointer", transition:"all 0.22s", marginBottom:32,
-          background:dragging?"rgba(124,58,237,0.12)":file?"rgba(15,118,110,0.08)":"rgba(255,255,255,0.025)",
-          border:dragging?"2px dashed rgba(124,58,237,0.7)":file?"2px dashed rgba(15,118,110,0.5)":"2px dashed rgba(255,255,255,0.1)" }}>
-        <input ref={fileRef} type="file" accept=".pdf,.doc,.docx" style={{display:"none"}} onChange={e=>setFile(e.target.files[0])} />
+      <div onDragOver={e => { e.preventDefault(); setDragging(true); }} onDragLeave={() => setDragging(false)} onDrop={handleDrop}
+        onClick={() => fileRef.current.click()}
+        style={{ borderRadius: 16, padding: "36px 24px", textAlign: "center", cursor: "pointer", transition: "all 0.22s", marginBottom: 32,
+          background: dragging ? "rgba(124,58,237,0.12)" : file ? "rgba(15,118,110,0.08)" : "rgba(255,255,255,0.025)",
+          border: dragging ? "2px dashed rgba(124,58,237,0.7)" : file ? "2px dashed rgba(15,118,110,0.5)" : "2px dashed rgba(255,255,255,0.1)" }}>
+        <input ref={fileRef} type="file" accept=".pdf,.doc,.docx" style={{ display: "none" }} onChange={e => setFile(e.target.files[0])} />
         {file ? (
           <>
-            <div style={{fontSize:32,marginBottom:10}}>📄</div>
-            <div style={{fontFamily:"system-ui,sans-serif",fontSize:14,fontWeight:800,color:"#fff",marginBottom:4}}>{file.name}</div>
-            <div style={{fontSize:12,color:"rgba(255,255,255,0.35)",fontFamily:"system-ui,sans-serif"}}>{(file.size/1024).toFixed(0)} KB · Click to change</div>
+            <div style={{ fontSize: 32, marginBottom: 10 }}>📄</div>
+            <div style={{ fontFamily: "system-ui,sans-serif", fontSize: 14, fontWeight: 800, color: "#fff", marginBottom: 4 }}>{file.name}</div>
+            <div style={{ fontSize: 12, color: "rgba(255,255,255,0.35)", fontFamily: "system-ui,sans-serif" }}>{(file.size / 1024).toFixed(0)} KB · Click to change</div>
           </>
-        ):(
+        ) : (
           <>
-            <div style={{fontSize:32,marginBottom:12,opacity:0.4}}>⬆</div>
-            <div style={{fontFamily:"system-ui,sans-serif",fontSize:14,fontWeight:800,color:"rgba(255,255,255,0.7)",marginBottom:6}}>Drag & drop your resume here</div>
-            <div style={{fontSize:12,color:"rgba(255,255,255,0.3)",fontFamily:"system-ui,sans-serif",marginBottom:14}}>PDF, DOC, or DOCX · max 5 MB</div>
-            <span style={{fontSize:12,fontWeight:700,fontFamily:"system-ui,sans-serif",color:"#a78bfa",padding:"6px 18px",borderRadius:100,background:"rgba(124,58,237,0.15)",border:"1px solid rgba(124,58,237,0.3)"}}>Browse Files</span>
+            <div style={{ fontSize: 32, marginBottom: 12, opacity: 0.4 }}>⬆</div>
+            <div style={{ fontFamily: "system-ui,sans-serif", fontSize: 14, fontWeight: 800, color: "rgba(255,255,255,0.7)", marginBottom: 6 }}>Drag & drop your resume here</div>
+            <div style={{ fontSize: 12, color: "rgba(255,255,255,0.3)", fontFamily: "system-ui,sans-serif", marginBottom: 14 }}>PDF, DOC, or DOCX · max 5 MB</div>
+            <span style={{ fontSize: 12, fontWeight: 700, fontFamily: "system-ui,sans-serif", color: "#a78bfa", padding: "6px 18px", borderRadius: 100, background: "rgba(124,58,237,0.15)", border: "1px solid rgba(124,58,237,0.3)" }}>Browse Files</span>
           </>
         )}
       </div>
-      <div style={{borderRadius:16,overflow:"hidden",border:"1px solid rgba(255,255,255,0.08)",background:"rgba(255,255,255,0.02)"}}>
-        <div style={{padding:"14px 20px",borderBottom:"1px solid rgba(255,255,255,0.07)",background:"rgba(255,255,255,0.03)"}}>
-          <span style={{fontSize:12,fontWeight:800,color:"rgba(255,255,255,0.55)",fontFamily:"system-ui,sans-serif",letterSpacing:"0.07em",textTransform:"uppercase"}}>Profile Summary</span>
+      <div style={{ borderRadius: 16, overflow: "hidden", border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.02)" }}>
+        <div style={{ padding: "14px 20px", borderBottom: "1px solid rgba(255,255,255,0.07)", background: "rgba(255,255,255,0.03)" }}>
+          <span style={{ fontSize: 12, fontWeight: 800, color: "rgba(255,255,255,0.55)", fontFamily: "system-ui,sans-serif", letterSpacing: "0.07em", textTransform: "uppercase" }}>Profile Summary</span>
         </div>
-        {rows.map((r,i)=>(
-          <div key={r.label} style={{display:"flex",justifyContent:"space-between",padding:"12px 20px",borderBottom:i<rows.length-1?"1px solid rgba(255,255,255,0.05)":"none",background:i%2===0?"transparent":"rgba(255,255,255,0.015)"}}>
-            <span style={{fontSize:12,color:"rgba(255,255,255,0.35)",fontFamily:"system-ui,sans-serif",fontWeight:700}}>{r.label}</span>
-            <span style={{fontSize:13,color:r.value==="—"?"rgba(255,255,255,0.2)":"#fff",fontFamily:"system-ui,sans-serif",maxWidth:"60%",textAlign:"right"}}>{r.value}</span>
+        {rows.map((r, i) => (
+          <div key={r.label} style={{ display: "flex", justifyContent: "space-between", padding: "12px 20px", borderBottom: i < rows.length - 1 ? "1px solid rgba(255,255,255,0.05)" : "none", background: i % 2 === 0 ? "transparent" : "rgba(255,255,255,0.015)" }}>
+            <span style={{ fontSize: 12, color: "rgba(255,255,255,0.35)", fontFamily: "system-ui,sans-serif", fontWeight: 700 }}>{r.label}</span>
+            <span style={{ fontSize: 13, color: r.value === "—" ? "rgba(255,255,255,0.2)" : "#fff", fontFamily: "system-ui,sans-serif", maxWidth: "60%", textAlign: "right" }}>{r.value}</span>
           </div>
         ))}
       </div>
@@ -426,7 +425,6 @@ function AIScanScreen({ onDone }) {
       if (idx >= AI_CHECKS.length) { setScanDone(true); setProgress(100); setTimeout(onDone, 900); return; }
       setCurrentIdx(idx);
       const dur = AI_CHECKS[idx].dur;
-      // progress bar ticks
       const tickMs = 40;
       let ticked = 0;
       const ticker = setInterval(() => {
@@ -441,16 +439,13 @@ function AIScanScreen({ onDone }) {
 
   return (
     <div style={{ textAlign: "center", padding: "40px 20px 60px" }}>
-      {/* Pulsing AI orb */}
       <div style={{ position: "relative", width: 120, height: 120, margin: "0 auto 36px", isolation: "isolate" }}>
-        {/* Outer rings — clipped to not bleed */}
-        {[0,1,2].map(i => (
-          <div key={i} style={{ position: "absolute", inset: -i*20, borderRadius: "50%",
-            border: `1px solid rgba(124,58,237,${0.3 - i*0.08})`,
+        {[0, 1, 2].map(i => (
+          <div key={i} style={{ position: "absolute", inset: -i * 20, borderRadius: "50%",
+            border: `1px solid rgba(124,58,237,${0.3 - i * 0.08})`,
             pointerEvents: "none",
-            animation: `pulseRing 2.2s ease-out ${i*0.55}s infinite` }} />
+            animation: `pulseRing 2.2s ease-out ${i * 0.55}s infinite` }} />
         ))}
-        {/* Core orb */}
         <div style={{ width: 120, height: 120, borderRadius: "50%", position: "relative",
           background: "linear-gradient(135deg,#4f46e5,#7c3aed,#0891b2)",
           boxShadow: "0 0 60px rgba(124,58,237,0.5), 0 0 120px rgba(8,145,178,0.2)",
@@ -460,25 +455,19 @@ function AIScanScreen({ onDone }) {
           </div>
         </div>
       </div>
-
       <h2 style={{ fontFamily: "'Georgia',serif", fontSize: "clamp(22px,3vw,34px)", fontWeight: 900,
         color: "#fff", letterSpacing: "-0.02em", margin: "0 0 8px" }}>
         {scanDone ? "Analysis Complete!" : "AI Reviewing Your Profile"}
       </h2>
-      <p style={{ fontSize: 14, color: "rgba(255,255,255,0.38)", fontFamily: "system-ui,sans-serif",
-        marginBottom: 36 }}>
+      <p style={{ fontSize: 14, color: "rgba(255,255,255,0.38)", fontFamily: "system-ui,sans-serif", marginBottom: 36 }}>
         {scanDone ? "Preparing your personalised recommendations…" : "Running a full profile check to maximise your chances of getting hired."}
       </p>
-
-      {/* Progress bar */}
       <div style={{ maxWidth: 480, margin: "0 auto 36px", borderRadius: 99,
         height: 6, background: "rgba(255,255,255,0.07)", overflow: "hidden" }}>
         <div style={{ height: "100%", borderRadius: 99, transition: "width 0.1s linear",
           background: "linear-gradient(90deg,#4f46e5,#7c3aed,#0891b2)",
           width: `${progress}%`, boxShadow: "0 0 12px rgba(124,58,237,0.6)" }} />
       </div>
-
-      {/* Check list */}
       <div style={{ maxWidth: 420, margin: "0 auto", display: "flex", flexDirection: "column", gap: 10 }}>
         {AI_CHECKS.map((c, i) => {
           const done    = completedChecks.includes(c.id);
@@ -489,7 +478,6 @@ function AIScanScreen({ onDone }) {
               background: done ? "rgba(15,118,110,0.1)" : running ? "rgba(124,58,237,0.12)" : "rgba(255,255,255,0.02)",
               border: done ? "1px solid rgba(15,118,110,0.25)" : running ? "1px solid rgba(124,58,237,0.28)" : "1px solid rgba(255,255,255,0.05)",
               opacity: i > currentIdx + 1 ? 0.35 : 1 }}>
-              {/* Status icon */}
               <div style={{ width: 22, height: 22, borderRadius: "50%", flexShrink: 0, display: "flex",
                 alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 800,
                 background: done ? "rgba(15,118,110,0.3)" : running ? "rgba(124,58,237,0.25)" : "rgba(255,255,255,0.05)",
@@ -498,15 +486,15 @@ function AIScanScreen({ onDone }) {
                 animation: running ? "pulseOpacity 1s ease-in-out infinite" : "none" }}>
                 {done ? "✓" : running ? "◈" : "○"}
               </div>
-              <span style={{ fontSize: 13, fontFamily: "system-ui,sans-serif", fontWeight: done||running ? 700 : 400,
+              <span style={{ fontSize: 13, fontFamily: "system-ui,sans-serif", fontWeight: done || running ? 700 : 400,
                 color: done ? "#6ee7b7" : running ? "#c4b5fd" : "rgba(255,255,255,0.3)" }}>
                 {c.label}
               </span>
               {running && (
                 <div style={{ marginLeft: "auto", display: "flex", gap: 3 }}>
-                  {[0,1,2].map(d => (
+                  {[0, 1, 2].map(d => (
                     <div key={d} style={{ width: 4, height: 4, borderRadius: "50%", background: "#a78bfa",
-                      animation: `dotBounce 0.8s ease-in-out ${d*0.15}s infinite` }} />
+                      animation: `dotBounce 0.8s ease-in-out ${d * 0.15}s infinite` }} />
                   ))}
                 </div>
               )}
@@ -528,23 +516,29 @@ function AIRecommendationsScreen({ merged, onAccept, onSubmitAnyway }) {
   const tips      = recs.filter(r => r.type === "tip");
   const successes = recs.filter(r => r.type === "success");
 
-  const scoreBase = 55 + (merged.bio?.length > 60 ? 10 : 0) + ((merged.skills||[]).length >= 5 ? 12 : 0) + (merged.udid ? 8 : 0) + ((merged.workModes||[]).length ? 8 : 0) + (merged.salary ? 7 : 0);
+  const scoreBase = 55
+    + (merged.bio?.length > 60 ? 10 : 0)
+    + ((merged.skills || []).length >= 5 ? 12 : 0)
+    + (merged.udid ? 8 : 0)
+    + ((merged.workModes || []).length ? 8 : 0)
+    + (merged.salary ? 7 : 0);
   const score = Math.min(100, scoreBase);
   const scoreColor = score >= 80 ? "#34d399" : score >= 60 ? "#facc15" : "#f87171";
 
   const RecCard = ({ rec }) => {
-    const cols = { warning: { bg:"rgba(239,68,68,0.08)",  border:"rgba(239,68,68,0.22)",  iconBg:"rgba(239,68,68,0.15)",  iconC:"#f87171",  label:"Fix suggested" },
-                   tip:     { bg:"rgba(251,191,36,0.07)", border:"rgba(251,191,36,0.22)", iconBg:"rgba(251,191,36,0.12)", iconC:"#fbbf24",  label:"Pro tip" },
-                   success: { bg:"rgba(15,118,110,0.08)", border:"rgba(15,118,110,0.22)", iconBg:"rgba(15,118,110,0.15)", iconC:"#34d399",  label:"Looks great" } };
+    const cols = {
+      warning: { bg: "rgba(239,68,68,0.08)",  border: "rgba(239,68,68,0.22)",  iconBg: "rgba(239,68,68,0.15)",  iconC: "#f87171",  label: "Fix suggested" },
+      tip:     { bg: "rgba(251,191,36,0.07)", border: "rgba(251,191,36,0.22)", iconBg: "rgba(251,191,36,0.12)", iconC: "#fbbf24",  label: "Pro tip" },
+      success: { bg: "rgba(15,118,110,0.08)", border: "rgba(15,118,110,0.22)", iconBg: "rgba(15,118,110,0.15)", iconC: "#34d399",  label: "Looks great" },
+    };
     const c = cols[rec.type];
     return (
-      <div style={{ borderRadius: 14, padding: "18px 20px",
-        background: c.bg, border: `1px solid ${c.border}` }}>
+      <div style={{ borderRadius: 14, padding: "18px 20px", background: c.bg, border: `1px solid ${c.border}` }}>
         <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
           <div style={{ width: 38, height: 38, borderRadius: 10, flexShrink: 0, background: c.iconBg,
             display: "flex", alignItems: "center", justifyContent: "center", fontSize: 17 }}>{rec.icon}</div>
           <div style={{ flex: 1 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 5 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 5, flexWrap: "wrap" }}>
               <span style={{ fontFamily: "system-ui,sans-serif", fontSize: 14, fontWeight: 800, color: "#fff" }}>{rec.title}</span>
               <span style={{ fontSize: 10, padding: "2px 8px", borderRadius: 20, fontFamily: "system-ui,sans-serif",
                 fontWeight: 700, background: c.iconBg, color: c.iconC }}>{c.label}</span>
@@ -559,8 +553,7 @@ function AIRecommendationsScreen({ merged, onAccept, onSubmitAnyway }) {
 
   return (
     <div>
-      {/* Header */}
-      <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 32 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 32, flexWrap: "wrap" }}>
         <div style={{ width: 56, height: 56, borderRadius: 16, flexShrink: 0,
           background: "linear-gradient(135deg,#4f46e5,#7c3aed)", display: "flex",
           alignItems: "center", justifyContent: "center", fontSize: 24,
@@ -572,7 +565,6 @@ function AIRecommendationsScreen({ merged, onAccept, onSubmitAnyway }) {
             Based on analysis of 10,000+ successful PwD profiles
           </p>
         </div>
-        {/* Score badge */}
         <div style={{ marginLeft: "auto", textAlign: "center", flexShrink: 0,
           padding: "12px 20px", borderRadius: 14, background: "rgba(255,255,255,0.04)",
           border: "1px solid rgba(255,255,255,0.08)" }}>
@@ -581,7 +573,6 @@ function AIRecommendationsScreen({ merged, onAccept, onSubmitAnyway }) {
         </div>
       </div>
 
-      {/* Score bar */}
       <div style={{ marginBottom: 32, padding: "16px 20px", borderRadius: 12,
         background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.07)" }}>
         <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
@@ -600,14 +591,13 @@ function AIRecommendationsScreen({ merged, onAccept, onSubmitAnyway }) {
         </div>
       </div>
 
-      {/* Rec cards */}
       <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 36 }}>
         {warnings.length > 0 && (
           <>
             <div style={{ fontSize: 11, color: "rgba(255,255,255,0.28)", fontFamily: "system-ui,sans-serif", letterSpacing: "0.1em", textTransform: "uppercase", marginTop: 4 }}>
               ✕ {warnings.length} fix{warnings.length !== 1 ? "es" : ""} suggested
             </div>
-            {warnings.map((r,i) => <RecCard key={i} rec={r} />)}
+            {warnings.map((r, i) => <RecCard key={i} rec={r} />)}
           </>
         )}
         {tips.length > 0 && (
@@ -615,20 +605,19 @@ function AIRecommendationsScreen({ merged, onAccept, onSubmitAnyway }) {
             <div style={{ fontSize: 11, color: "rgba(255,255,255,0.28)", fontFamily: "system-ui,sans-serif", letterSpacing: "0.1em", textTransform: "uppercase", marginTop: 8 }}>
               ✦ {tips.length} pro tip{tips.length !== 1 ? "s" : ""}
             </div>
-            {tips.map((r,i) => <RecCard key={i} rec={r} />)}
+            {tips.map((r, i) => <RecCard key={i} rec={r} />)}
           </>
         )}
-        {successes.map((r,i) => <RecCard key={i} rec={r} />)}
+        {successes.map((r, i) => <RecCard key={i} rec={r} />)}
       </div>
 
-      {/* CTA buttons */}
       <div style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "flex-end" }}>
         <button onClick={onSubmitAnyway}
           style={{ padding: "13px 28px", borderRadius: 100, fontSize: 13, fontWeight: 800,
             fontFamily: "system-ui,sans-serif", cursor: "pointer", background: "transparent",
             color: "rgba(255,255,255,0.45)", border: "1px solid rgba(255,255,255,0.15)", transition: "all 0.2s" }}
-          onMouseEnter={e => { e.currentTarget.style.background="rgba(255,255,255,0.06)"; e.currentTarget.style.color="#fff"; }}
-          onMouseLeave={e => { e.currentTarget.style.background="transparent"; e.currentTarget.style.color="rgba(255,255,255,0.45)"; }}>
+          onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.06)"; e.currentTarget.style.color = "#fff"; }}
+          onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "rgba(255,255,255,0.45)"; }}>
           Submit anyway
         </button>
         <button onClick={onAccept}
@@ -636,8 +625,8 @@ function AIRecommendationsScreen({ merged, onAccept, onSubmitAnyway }) {
             fontFamily: "system-ui,sans-serif", cursor: "pointer", border: "none",
             background: "linear-gradient(135deg,#7c3aed,#0891b2)", color: "#fff",
             boxShadow: "0 0 24px rgba(124,58,237,0.4)", transition: "opacity 0.2s" }}
-          onMouseEnter={e => e.currentTarget.style.opacity="0.85"}
-          onMouseLeave={e => e.currentTarget.style.opacity="1"}>
+          onMouseEnter={e => e.currentTarget.style.opacity = "0.85"}
+          onMouseLeave={e => e.currentTarget.style.opacity = "1"}>
           ✓ Apply suggestions & go back to edit
         </button>
       </div>
@@ -678,25 +667,16 @@ function SuccessScreen({ name }) {
 }
 
 /* ──────────────── MAIN PAGE ──────────────── */
-// screen: "form" | "scanning" | "recommendations" | "success"
 export default function PostResumePage() {
   const [step,    setStep]   = useState(1);
   const [screen,  setScreen] = useState("form"); // "form" | "scanning" | "recommendations" | "success"
 
-  const [personal,   setPersonal]   = useState({ firstName:"", lastName:"", email:"", phone:"", city:"", exp:"", jobTitle:"", bio:"" });
-  const [skillsData, setSkillsData] = useState({ skills:[] });
-  const [disData,    setDisData]    = useState({ disabilityType:"", udid:"", disabilityPct:40, accommodations:[] });
-  const [prefData,   setPrefData]   = useState({ workModes:[], jobTypes:[], categories:[], prefLocation:"", salary:"", joining:"" });
+  const [personal,   setPersonal]   = useState({ firstName: "", lastName: "", email: "", phone: "", city: "", exp: "", jobTitle: "", bio: "" });
+  const [skillsData, setSkillsData] = useState({ skills: [] });
+  const [disData,    setDisData]    = useState({ disabilityType: "", udid: "", disabilityPct: 40, accommodations: [] });
+  const [prefData,   setPrefData]   = useState({ workModes: [], jobTypes: [], categories: [], prefLocation: "", salary: "", joining: "" });
 
   const merged = { ...personal, ...skillsData, ...disData, ...prefData };
-
-  /* ── FIX: canNext is a plain function, not a hook ── */
-  const canNext = () => {
-    if (step === 1) return !!(personal.firstName && personal.email && personal.city);
-    if (step === 2) return skillsData.skills.length > 0;
-    if (step === 3) return !!disData.disabilityType;
-    return true;
-  };
 
   const goNext = () => {
     if (step < 5) setStep(s => s + 1);
@@ -704,74 +684,68 @@ export default function PostResumePage() {
   };
 
   const goBack = () => {
-    if (screen === "recommendations") { setScreen("form"); }   // back from recs → form step 5
+    if (screen === "recommendations") { setScreen("form"); }
     else if (step > 1) setStep(s => s - 1);
   };
 
-  const nextOk = true; // no blocking — validation is advisory only
-
   return (
-    <div style={{ background:"linear-gradient(160deg,#060c1a 0%,#081424 40%,#0b1a30 75%,#060c1a 100%)", minHeight:"100vh", overflowX:"hidden", position:"relative" }}>
-      <div style={{ position:"fixed", inset:0, zIndex:-1, background:"linear-gradient(160deg,#060c1a 0%,#081424 40%,#0b1a30 75%,#060c1a 100%)" }} />
+    <div style={{ background: "linear-gradient(160deg,#060c1a 0%,#081424 40%,#0b1a30 75%,#060c1a 100%)", minHeight: "100vh", overflowX: "hidden", position: "relative" }}>
 
       <style>{`
-        @keyframes twinkle{0%,100%{opacity:var(--op)}50%{opacity:calc(var(--op)*0.2)}}
-        @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
-        @keyframes pulseRing{0%{transform:scale(1);opacity:0.5}100%{transform:scale(1.9);opacity:0}}
-        @keyframes spinSlow{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-        @keyframes dotBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
-        @keyframes pulseOpacity{0%,100%{opacity:1}50%{opacity:0.4}}
-        @keyframes slideIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-        .fu{animation:fadeUp 0.5s ease 0.05s forwards;opacity:0}
-        .step-in{animation:slideIn 0.35s ease forwards;opacity:0}
-        .ai-in{animation:slideIn 0.5s ease 0.1s forwards;opacity:0}
-        input::placeholder,textarea::placeholder{color:rgba(255,255,255,0.22)!important}
-        input[type=range]{-webkit-appearance:none;height:4px;border-radius:4px;background:rgba(255,255,255,0.1)}
-        input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#7c3aed;cursor:pointer;box-shadow:0 0 0 3px rgba(124,58,237,0.2)}
-        select option{background:#0d1e3a;color:#fff}
-        ::-webkit-scrollbar{width:5px}
-        ::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:3px}
+        @keyframes twinkle    { 0%,100%{opacity:var(--op)} 50%{opacity:calc(var(--op)*0.2)} }
+        @keyframes fadeUp     { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes pulseRing  { 0%{transform:scale(1);opacity:0.5} 100%{transform:scale(1.9);opacity:0} }
+        @keyframes spinSlow   { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+        @keyframes dotBounce  { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
+        @keyframes pulseOpacity { 0%,100%{opacity:1} 50%{opacity:0.4} }
+        @keyframes slideIn    { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+        /* FIX: use animation-fill-mode "both" so the element starts invisible
+           via the keyframe (not an inline style) and stays visible after.
+           This prevents a transparent overlay from blocking button clicks. */
+        .fu       { animation: fadeUp  0.5s  ease 0.05s both; }
+        .step-in  { animation: slideIn 0.35s ease       both; }
+        .ai-in    { animation: slideIn 0.5s  ease 0.1s  both; }
+
+        input::placeholder, textarea::placeholder { color: rgba(255,255,255,0.22) !important; }
+        input[type=range] { -webkit-appearance: none; height: 4px; border-radius: 4px; background: rgba(255,255,255,0.1); }
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: #7c3aed; cursor: pointer; box-shadow: 0 0 0 3px rgba(124,58,237,0.2); }
+        select option { background: #0d1e3a; color: #fff; }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
       `}</style>
 
       {/* STARFIELD */}
-      <div style={{ position:"fixed", inset:0, pointerEvents:"none", zIndex:0, overflow:"hidden" }}>
+      <div style={{ position: "fixed", inset: 0, pointerEvents: "none", zIndex: 0, overflow: "hidden" }}>
         {STARS.map(s => (
-          <div key={s.id} style={{ position:"absolute", top:s.top+"%", left:s.left+"%",
-            width:s.size, height:s.size, borderRadius:"50%", background:"#fff",
-            "--op":s.op, opacity:s.op, animation:`twinkle ${s.dur}s ease-in-out ${s.delay}s infinite` }} />
+          <div key={s.id} style={{ position: "absolute", top: s.top + "%", left: s.left + "%",
+            width: s.size, height: s.size, borderRadius: "50%", background: "#fff",
+            "--op": s.op, opacity: s.op, animation: `twinkle ${s.dur}s ease-in-out ${s.delay}s infinite` }} />
         ))}
-        <div style={{ position:"absolute", top:"15%", right:"5%", width:500, height:500, borderRadius:"50%", background:"radial-gradient(circle,rgba(124,58,237,0.08) 0%,transparent 70%)", pointerEvents:"none" }}/>
-        <div style={{ position:"absolute", bottom:"10%", left:"3%", width:400, height:400, borderRadius:"50%", background:"radial-gradient(circle,rgba(8,145,178,0.06) 0%,transparent 70%)", pointerEvents:"none" }}/>
+        <div style={{ position: "absolute", top: "15%", right: "5%", width: 500, height: 500, borderRadius: "50%", background: "radial-gradient(circle,rgba(124,58,237,0.08) 0%,transparent 70%)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", bottom: "10%", left: "3%", width: 400, height: 400, borderRadius: "50%", background: "radial-gradient(circle,rgba(8,145,178,0.06) 0%,transparent 70%)", pointerEvents: "none" }} />
       </div>
 
-      <div style={{ position:"relative", zIndex:1, maxWidth:1100, margin:"0 auto", padding:"0 24px" }}>
+      <div style={{ position: "relative", zIndex: 1, maxWidth: 1100, margin: "0 auto", padding: "0 24px" }}>
 
-        {/* ══════ HERO — shown on form & recommendation screens ══════ */}
+        {/* HERO */}
         {(screen === "form" || screen === "recommendations") && (
-          <section className="fu" style={{ padding:"52px 0 40px" }}>
-            <div style={{ borderRadius:24, overflow:"hidden", position:"relative",
-              background:"linear-gradient(135deg,#130d3b 0%,#1a1250 35%,#0a1628 70%,#041520 100%)",
-              border:"1px solid rgba(139,92,246,0.16)", padding:"38px 52px",
-              display:"flex", alignItems:"center", justifyContent:"space-between", gap:32, flexWrap:"wrap" }}>
-              <div style={{ position:"absolute", inset:0, backgroundImage:"linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px)", backgroundSize:"40px 40px", pointerEvents:"none" }}/>
-              <div style={{ position:"absolute", right:0, top:0, bottom:0, width:"35%", overflow:"hidden", pointerEvents:"none" }}>
-                <svg viewBox="0 0 380 200" width="380" height="200" style={{ position:"absolute", right:-30, top:0 }}>
-                  {[{x:200,y:50,r:52,c:"#7c3aed"},{x:290,y:100,r:44,c:"#0891b2"},{x:220,y:150,r:40,c:"#be123c"},{x:330,y:40,r:36,c:"#0f766e"}].map((d,i)=>(
-                    <g key={i}><circle cx={d.x} cy={d.y} r={d.r} fill={d.c} opacity="0.28"/><circle cx={d.x} cy={d.y} r={d.r*0.5} fill="#fff" opacity="0.06"/></g>
-                  ))}
-                </svg>
-                <div style={{ position:"absolute", inset:0, background:"linear-gradient(to right,rgba(8,20,36,1) 0%,transparent 45%)" }}/>
+          <section className="fu" style={{ padding: "52px 0 40px" }}>
+            <div style={{ borderRadius: 24, overflow: "hidden", position: "relative",
+              background: "linear-gradient(135deg,#130d3b 0%,#1a1250 35%,#0a1628 70%,#041520 100%)",
+              border: "1px solid rgba(139,92,246,0.16)", padding: "38px 52px",
+              display: "flex", alignItems: "center", justifyContent: "space-between", gap: 32, flexWrap: "wrap" }}>
+              <div style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px)", backgroundSize: "40px 40px", pointerEvents: "none" }} />
+              <div style={{ position: "relative", zIndex: 1 }}>
+                <p style={{ fontSize: 10, color: "rgba(255,255,255,0.35)", letterSpacing: "0.15em", textTransform: "uppercase", fontFamily: "system-ui,sans-serif", margin: "0 0 10px" }}>EmpowerAble · Career</p>
+                <h1 style={{ fontFamily: "'Georgia',serif", fontSize: "clamp(28px,4vw,50px)", fontWeight: 900, color: "#fff", lineHeight: 0.95, letterSpacing: "-0.025em", margin: "0 0 12px" }}>Post Your Resume.<br />Get Hired.</h1>
+                <p style={{ fontSize: 14, color: "rgba(255,255,255,0.38)", fontFamily: "system-ui,sans-serif", lineHeight: 1.65, maxWidth: 420, margin: 0 }}>Build your disability-inclusive profile in 5 simple steps. 180+ employers are actively hiring PwDs.</p>
               </div>
-              <div style={{ position:"relative", zIndex:1 }}>
-                <p style={{ fontSize:10, color:"rgba(255,255,255,0.35)", letterSpacing:"0.15em", textTransform:"uppercase", fontFamily:"system-ui,sans-serif", margin:"0 0 10px" }}>EmpowerAble · Career</p>
-                <h1 style={{ fontFamily:"'Georgia',serif", fontSize:"clamp(28px,4vw,50px)", fontWeight:900, color:"#fff", lineHeight:0.95, letterSpacing:"-0.025em", margin:"0 0 12px" }}>Post Your Resume.<br/>Get Hired.</h1>
-                <p style={{ fontSize:14, color:"rgba(255,255,255,0.38)", fontFamily:"system-ui,sans-serif", lineHeight:1.65, maxWidth:420, margin:0 }}>Build your disability-inclusive profile in 5 simple steps. 180+ employers are actively hiring PwDs.</p>
-              </div>
-              <div style={{ position:"relative", zIndex:1, display:"flex", gap:20, flexWrap:"wrap" }}>
-                {[{n:"180+",l:"Employers Hiring"},{n:"5 min",l:"To Complete"},{n:"Free",l:"Always"}].map(s => (
-                  <div key={s.l} style={{ textAlign:"center" }}>
-                    <div style={{ fontFamily:"'Georgia',serif", fontSize:"clamp(22px,2.5vw,32px)", fontWeight:900, color:"#fff", lineHeight:1 }}>{s.n}</div>
-                    <div style={{ fontSize:10, color:"rgba(255,255,255,0.3)", marginTop:5, letterSpacing:"0.1em", textTransform:"uppercase", fontFamily:"system-ui,sans-serif" }}>{s.l}</div>
+              <div style={{ position: "relative", zIndex: 1, display: "flex", gap: 20, flexWrap: "wrap" }}>
+                {[{ n: "180+", l: "Employers Hiring" }, { n: "5 min", l: "To Complete" }, { n: "Free", l: "Always" }].map(s => (
+                  <div key={s.l} style={{ textAlign: "center" }}>
+                    <div style={{ fontFamily: "'Georgia',serif", fontSize: "clamp(22px,2.5vw,32px)", fontWeight: 900, color: "#fff", lineHeight: 1 }}>{s.n}</div>
+                    <div style={{ fontSize: 10, color: "rgba(255,255,255,0.3)", marginTop: 5, letterSpacing: "0.1em", textTransform: "uppercase", fontFamily: "system-ui,sans-serif" }}>{s.l}</div>
                   </div>
                 ))}
               </div>
@@ -781,128 +755,127 @@ export default function PostResumePage() {
 
         {/* BREADCRUMB */}
         {screen !== "success" && (
-          <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:36, fontSize:12, fontFamily:"system-ui,sans-serif", color:"rgba(255,255,255,0.28)" }}>
-            <span style={{ cursor:"pointer" }} onMouseEnter={e=>e.currentTarget.style.color="#fff"} onMouseLeave={e=>e.currentTarget.style.color="rgba(255,255,255,0.28)"}>Home</span>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 36, fontSize: 12, fontFamily: "system-ui,sans-serif", color: "rgba(255,255,255,0.28)" }}>
+            <span>Home</span>
             <span>/</span>
-            <span style={{ color:"rgba(255,255,255,0.55)" }}>Post Resume</span>
-            {screen === "scanning" && <><span>/</span><span style={{ color:"rgba(139,92,246,0.9)" }}>AI Review</span></>}
-            {screen === "recommendations" && <><span>/</span><span style={{ color:"rgba(139,92,246,0.9)" }}>Recommendations</span></>}
+            <span style={{ color: "rgba(255,255,255,0.55)" }}>Post Resume</span>
+            {screen === "scanning" && <><span>/</span><span style={{ color: "rgba(139,92,246,0.9)" }}>AI Review</span></>}
+            {screen === "recommendations" && <><span>/</span><span style={{ color: "rgba(139,92,246,0.9)" }}>Recommendations</span></>}
           </div>
         )}
 
-        {/* ══════ SCANNING SCREEN ══════ */}
+        {/* SCANNING SCREEN */}
         {screen === "scanning" && (
-          <div className="ai-in" style={{ borderRadius:24, padding:"20px 40px 40px",
-            background:"#080f20", border:"1px solid rgba(139,92,246,0.2)",
-            marginBottom:80 }}>
+          <div className="ai-in" style={{ borderRadius: 24, padding: "20px 40px 40px",
+            background: "#080f20", border: "1px solid rgba(139,92,246,0.2)", marginBottom: 80 }}>
             <AIScanScreen onDone={() => setScreen("recommendations")} />
           </div>
         )}
 
-        {/* ══════ RECOMMENDATIONS SCREEN ══════ */}
+        {/* RECOMMENDATIONS SCREEN */}
         {screen === "recommendations" && (
-          <div className="ai-in" style={{ borderRadius:24, padding:"36px 40px",
-            background:"#080f20", border:"1px solid rgba(139,92,246,0.2)",
-            marginBottom:80 }}>
+          <div className="ai-in" style={{ borderRadius: 24, padding: "36px 40px",
+            background: "#080f20", border: "1px solid rgba(139,92,246,0.2)", marginBottom: 80 }}>
             <AIRecommendationsScreen
               merged={merged}
-              onAccept={() => { setStep(1); setScreen("form"); }}        /* go back to edit */
+              onAccept={() => { setStep(1); setScreen("form"); }}
               onSubmitAnyway={() => setScreen("success")}
             />
           </div>
         )}
 
-        {/* ══════ SUCCESS SCREEN ══════ */}
+        {/* SUCCESS SCREEN */}
         {screen === "success" && <SuccessScreen name={personal.firstName} />}
 
-        {/* ══════ FORM SCREEN ══════ */}
+        {/* FORM SCREEN */}
         {screen === "form" && (
-          <div style={{ display:"grid", gridTemplateColumns:"280px 1fr", gap:28, paddingBottom:80 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "280px 1fr", gap: 28, paddingBottom: 80 }}>
 
-            {/* ── LEFT SIDEBAR ── */}
-            <div style={{ position:"sticky", top:100, height:"fit-content" }}>
-              <div style={{ borderRadius:16, padding:"20px", marginBottom:16, background:"#080f20", border:"1px solid rgba(255,255,255,0.07)" }}>
-                <div style={{ fontSize:11, color:"rgba(255,255,255,0.3)", fontFamily:"system-ui,sans-serif", letterSpacing:"0.1em", textTransform:"uppercase", marginBottom:16 }}>Your Progress</div>
+            {/* LEFT SIDEBAR */}
+            <div style={{ position: "sticky", top: 100, height: "fit-content" }}>
+              <div style={{ borderRadius: 16, padding: "20px", marginBottom: 16, background: "#080f20", border: "1px solid rgba(255,255,255,0.07)" }}>
+                <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", fontFamily: "system-ui,sans-serif", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 16 }}>Your Progress</div>
                 {STEPS.map(s => {
                   const done   = s.id < step;
                   const active = s.id === step;
                   return (
-                    <div key={s.id} style={{ display:"flex", alignItems:"flex-start", gap:12, marginBottom:14, opacity:s.id>step?0.35:1, transition:"opacity 0.2s" }}>
-                      <div style={{ width:30, height:30, borderRadius:"50%", flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center", fontSize:12, marginTop:2,
-                        background:done?"#7c3aed":active?"rgba(124,58,237,0.18)":"rgba(255,255,255,0.04)",
-                        border:done?"2px solid #7c3aed":active?"2px solid rgba(124,58,237,0.6)":"2px solid rgba(255,255,255,0.1)",
-                        color:done?"#fff":active?"#a78bfa":"rgba(255,255,255,0.3)" }}>
+                    <div key={s.id} style={{ display: "flex", alignItems: "flex-start", gap: 12, marginBottom: 14, opacity: s.id > step ? 0.35 : 1, transition: "opacity 0.2s" }}>
+                      <div style={{ width: 30, height: 30, borderRadius: "50%", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, marginTop: 2,
+                        background: done ? "#7c3aed" : active ? "rgba(124,58,237,0.18)" : "rgba(255,255,255,0.04)",
+                        border: done ? "2px solid #7c3aed" : active ? "2px solid rgba(124,58,237,0.6)" : "2px solid rgba(255,255,255,0.1)",
+                        color: done ? "#fff" : active ? "#a78bfa" : "rgba(255,255,255,0.3)" }}>
                         {done ? "✓" : s.icon}
                       </div>
                       <div>
-                        <div style={{ fontFamily:"system-ui,sans-serif", fontSize:13, fontWeight:active?800:600, marginBottom:2,
-                          color:active?"#fff":done?"rgba(255,255,255,0.6)":"rgba(255,255,255,0.3)" }}>{s.label}</div>
-                        <div style={{ fontSize:11, color:"rgba(255,255,255,0.22)", fontFamily:"system-ui,sans-serif" }}>{s.desc}</div>
+                        <div style={{ fontFamily: "system-ui,sans-serif", fontSize: 13, fontWeight: active ? 800 : 600, marginBottom: 2,
+                          color: active ? "#fff" : done ? "rgba(255,255,255,0.6)" : "rgba(255,255,255,0.3)" }}>{s.label}</div>
+                        <div style={{ fontSize: 11, color: "rgba(255,255,255,0.22)", fontFamily: "system-ui,sans-serif" }}>{s.desc}</div>
                       </div>
                     </div>
                   );
                 })}
               </div>
-              <div style={{ borderRadius:14, padding:"18px 20px", background:"linear-gradient(135deg,rgba(124,58,237,0.1) 0%,rgba(8,145,178,0.06) 100%)", border:"1px solid rgba(124,58,237,0.18)" }}>
-                <div style={{ fontSize:12, fontWeight:800, color:"#a78bfa", fontFamily:"system-ui,sans-serif", marginBottom:10 }}>💡 Quick Tips</div>
-                {["Use a professional photo if possible","Add at least 5 skills to improve matches","UDID certificate doubles your interview calls","Remote roles get 3× more PwD applicants"].map((t,i) => (
-                  <div key={i} style={{ display:"flex", gap:8, marginBottom:8, alignItems:"flex-start" }}>
-                    <span style={{ color:"rgba(167,139,250,0.5)", fontSize:10, marginTop:2, flexShrink:0 }}>◆</span>
-                    <span style={{ fontSize:12, color:"rgba(255,255,255,0.35)", fontFamily:"system-ui,sans-serif", lineHeight:1.5 }}>{t}</span>
+              <div style={{ borderRadius: 14, padding: "18px 20px", background: "linear-gradient(135deg,rgba(124,58,237,0.1) 0%,rgba(8,145,178,0.06) 100%)", border: "1px solid rgba(124,58,237,0.18)" }}>
+                <div style={{ fontSize: 12, fontWeight: 800, color: "#a78bfa", fontFamily: "system-ui,sans-serif", marginBottom: 10 }}>💡 Quick Tips</div>
+                {["Use a professional photo if possible", "Add at least 5 skills to improve matches", "UDID certificate doubles your interview calls", "Remote roles get 3× more PwD applicants"].map((t, i) => (
+                  <div key={i} style={{ display: "flex", gap: 8, marginBottom: 8, alignItems: "flex-start" }}>
+                    <span style={{ color: "rgba(167,139,250,0.5)", fontSize: 10, marginTop: 2, flexShrink: 0 }}>◆</span>
+                    <span style={{ fontSize: 12, color: "rgba(255,255,255,0.35)", fontFamily: "system-ui,sans-serif", lineHeight: 1.5 }}>{t}</span>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* ── RIGHT FORM PANEL ── */}
+            {/* RIGHT FORM PANEL */}
             <div>
               <StepBar current={step} />
-              <div className="step-in" key={step} style={{ borderRadius:20, padding:"36px 40px", background:"#080f20", border:"1px solid rgba(255,255,255,0.08)", marginBottom:20 }}>
-                {step === 1 && <Step1 data={personal}   setData={setPersonal}  />}
-                {step === 2 && <Step2 data={skillsData}  setData={setSkillsData}/>}
-                {step === 3 && <Step3 data={disData}     setData={setDisData}   />}
-                {step === 4 && <Step4 data={prefData}    setData={setPrefData}  />}
+              {/* KEY FIX: no inline opacity:0 on this div — the .step-in class handles
+                  the fade-in via animation-fill-mode:both so it never blocks clicks */}
+              <div className="step-in" key={step} style={{ borderRadius: 20, padding: "36px 40px", background: "#080f20", border: "1px solid rgba(255,255,255,0.08)", marginBottom: 20 }}>
+                {step === 1 && <Step1 data={personal}   setData={setPersonal}   />}
+                {step === 2 && <Step2 data={skillsData}  setData={setSkillsData} />}
+                {step === 3 && <Step3 data={disData}     setData={setDisData}    />}
+                {step === 4 && <Step4 data={prefData}    setData={setPrefData}   />}
                 {step === 5 && <Step5 pdata={merged} />}
               </div>
 
               {/* NAV BUTTONS */}
-              <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", position:"relative", zIndex:2 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 {step > 1 ? (
                   <button onClick={goBack}
-                    style={{ padding:"12px 28px", borderRadius:100, fontSize:13, fontWeight:800, fontFamily:"system-ui,sans-serif", cursor:"pointer", background:"transparent", color:"rgba(255,255,255,0.5)", border:"1px solid rgba(255,255,255,0.15)", transition:"all 0.2s" }}
-                    onMouseEnter={e=>{e.currentTarget.style.background="rgba(255,255,255,0.06)";e.currentTarget.style.color="#fff";}}
-                    onMouseLeave={e=>{e.currentTarget.style.background="transparent";e.currentTarget.style.color="rgba(255,255,255,0.5)";}}>
+                    style={{ padding: "12px 28px", borderRadius: 100, fontSize: 13, fontWeight: 800, fontFamily: "system-ui,sans-serif", cursor: "pointer", background: "transparent", color: "rgba(255,255,255,0.5)", border: "1px solid rgba(255,255,255,0.15)", transition: "all 0.2s" }}
+                    onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.06)"; e.currentTarget.style.color = "#fff"; }}
+                    onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "rgba(255,255,255,0.5)"; }}>
                     ← Back
                   </button>
                 ) : <div />}
 
-                <div style={{ display:"flex", alignItems:"center", gap:14 }}>
-                  <div style={{ display:"flex", gap:6 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                  <div style={{ display: "flex", gap: 6 }}>
                     {STEPS.map(s => (
-                      <div key={s.id} style={{ width:s.id===step?18:6, height:6, borderRadius:3, transition:"all 0.25s",
-                        background:s.id<step?"#7c3aed":s.id===step?"rgba(167,139,250,0.8)":"rgba(255,255,255,0.12)" }} />
+                      <div key={s.id} style={{ width: s.id === step ? 18 : 6, height: 6, borderRadius: 3, transition: "all 0.25s",
+                        background: s.id < step ? "#7c3aed" : s.id === step ? "rgba(167,139,250,0.8)" : "rgba(255,255,255,0.12)" }} />
                     ))}
                   </div>
 
                   {step < 5 ? (
                     <button onClick={goNext}
-                      style={{ padding:"12px 32px", borderRadius:100, fontSize:13, fontWeight:800,
-                        fontFamily:"system-ui,sans-serif", cursor:"pointer",
-                        background:"rgba(255,255,255,0.92)", color:"#060c1a",
-                        border:"none", transition:"all 0.2s" }}
-                      onMouseEnter={e => e.currentTarget.style.opacity="0.85"}
-                      onMouseLeave={e => e.currentTarget.style.opacity="1"}>
+                      style={{ padding: "12px 32px", borderRadius: 100, fontSize: 13, fontWeight: 800,
+                        fontFamily: "system-ui,sans-serif", cursor: "pointer",
+                        background: "rgba(255,255,255,0.92)", color: "#060c1a",
+                        border: "none", transition: "all 0.2s" }}
+                      onMouseEnter={e => e.currentTarget.style.opacity = "0.85"}
+                      onMouseLeave={e => e.currentTarget.style.opacity = "1"}>
                       Continue →
                     </button>
                   ) : (
-                    /* Step 5 — triggers AI scan */
                     <button onClick={goNext}
-                      style={{ padding:"12px 36px", borderRadius:100, fontSize:13, fontWeight:800,
-                        fontFamily:"system-ui,sans-serif", cursor:"pointer", border:"none",
-                        background:"linear-gradient(135deg,#7c3aed,#0891b2)", color:"#fff",
-                        boxShadow:"0 0 24px rgba(124,58,237,0.4)", transition:"opacity 0.2s" }}
-                      onMouseEnter={e=>e.currentTarget.style.opacity="0.85"}
-                      onMouseLeave={e=>e.currentTarget.style.opacity="1"}>
+                      style={{ padding: "12px 36px", borderRadius: 100, fontSize: 13, fontWeight: 800,
+                        fontFamily: "system-ui,sans-serif", cursor: "pointer", border: "none",
+                        background: "linear-gradient(135deg,#7c3aed,#0891b2)", color: "#fff",
+                        boxShadow: "0 0 24px rgba(124,58,237,0.4)", transition: "opacity 0.2s" }}
+                      onMouseEnter={e => e.currentTarget.style.opacity = "0.85"}
+                      onMouseLeave={e => e.currentTarget.style.opacity = "1"}>
                       ◈ Run AI Review & Submit
                     </button>
                   )}
@@ -910,9 +883,9 @@ export default function PostResumePage() {
               </div>
 
               {(step === 3 || step === 4) && (
-                <div style={{ textAlign:"center", marginTop:14 }}>
+                <div style={{ textAlign: "center", marginTop: 14 }}>
                   <button onClick={() => setStep(s => s + 1)}
-                    style={{ fontSize:12, color:"rgba(255,255,255,0.25)", fontFamily:"system-ui,sans-serif", background:"none", border:"none", cursor:"pointer", textDecoration:"underline" }}>
+                    style={{ fontSize: 12, color: "rgba(255,255,255,0.25)", fontFamily: "system-ui,sans-serif", background: "none", border: "none", cursor: "pointer", textDecoration: "underline" }}>
                     Skip this step for now
                   </button>
                 </div>
@@ -923,9 +896,9 @@ export default function PostResumePage() {
 
         {/* FOOTER */}
         {screen !== "success" && (
-          <section style={{ textAlign:"center", paddingBottom:80, borderTop:"1px solid rgba(255,255,255,0.05)", paddingTop:56, marginTop:20 }}>
-            <div style={{ fontFamily:"'Georgia',serif", fontSize:"clamp(48px,8vw,108px)", fontWeight:900, letterSpacing:"-0.04em", color:"rgba(255,255,255,0.04)", lineHeight:0.85, userSelect:"none" }}>EMPOWERABLE</div>
-            <p style={{ color:"rgba(255,255,255,0.14)", fontSize:11, letterSpacing:"0.18em", textTransform:"uppercase", fontFamily:"system-ui,sans-serif", marginTop:-14 }}>Work · Dignity · Belonging</p>
+          <section style={{ textAlign: "center", paddingBottom: 80, borderTop: "1px solid rgba(255,255,255,0.05)", paddingTop: 56, marginTop: 20 }}>
+            <div style={{ fontFamily: "'Georgia',serif", fontSize: "clamp(48px,8vw,108px)", fontWeight: 900, letterSpacing: "-0.04em", color: "rgba(255,255,255,0.04)", lineHeight: 0.85, userSelect: "none" }}>EMPOWERABLE</div>
+            <p style={{ color: "rgba(255,255,255,0.14)", fontSize: 11, letterSpacing: "0.18em", textTransform: "uppercase", fontFamily: "system-ui,sans-serif", marginTop: -14 }}>Work · Dignity · Belonging</p>
           </section>
         )}
       </div>
