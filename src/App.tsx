@@ -14,6 +14,8 @@ import ShopProducts from "./Shop_Products";
 import SellProducts from "./Sell_products";
 import Jobs from "./Browse_Jobs";
 import PostResume from "./Post_Resume";
+import ChatBotWidget from "./ChatbotWidget";
+
 // ─── Dropdown data ───────────────────────────────────────────────────────────
 
 const NAV_DROPDOWNS: Record<string, {
@@ -52,15 +54,6 @@ const NAV_DROPDOWNS: Record<string, {
       label: "Hiring Process",
       desc: "Hire people with desired skills",
     },
-    // {
-    //   icon: (
-    //     <svg className="w-4 h-4 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
-    //       <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-    //     </svg>
-    //   ),
-    //   label: "Grants & Stipends",
-    //   desc: "Financial support programs",
-    // },
   ],
 
   Learn: [
@@ -83,15 +76,6 @@ const NAV_DROPDOWNS: Record<string, {
       label: "Workshops",
       desc: "Online workshops for upskilling and learning",
     },
-    // {
-    //   icon: (
-    //     <svg className="w-4 h-4 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
-    //       <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-    //     </svg>
-    //   ),
-    //   label: "Certifications",
-    //   desc: "Earn verified credentials",
-    // },
     {
       icon: (
         <svg className="w-4 h-4 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
@@ -114,15 +98,6 @@ const NAV_DROPDOWNS: Record<string, {
       desc: "Buy the products you like",
       to: "/shop-products",
     },
-    // {
-    //   icon: (
-    //     <svg className="w-4 h-4 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
-    //       <path strokeLinecap="round" strokeLinejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-    //     </svg>
-    //   ),
-    //   label: "Top Rated",
-    //   desc: "Community favourites",
-    // },
     {
       icon: (
         <svg className="w-4 h-4 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
@@ -131,17 +106,8 @@ const NAV_DROPDOWNS: Record<string, {
       ),
       label: "Sell Your Work",
       desc: "List services or products",
-      to:"/sell-products",
+      to: "/sell-products",
     },
-    // {
-    //   icon: (
-    //     <svg className="w-4 h-4 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
-    //       <path strokeLinecap="round" strokeLinejoin="round" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z" />
-    //     </svg>
-    //   ),
-    //   label: "Deals & Offers",
-    //   desc: "Exclusive discounts for you",
-    // },
   ],
 };
 
@@ -178,7 +144,7 @@ function DropdownPanel({
           </div>
 
           <div className="flex flex-col gap-0.5">
-            {items.map((item, i) => (
+            {items.map((item, i) =>
               item.to ? (
                 <Link
                   key={i}
@@ -231,7 +197,7 @@ function DropdownPanel({
                   </div>
                 </div>
               )
-            ))}
+            )}
           </div>
 
           <div className="px-3 pt-3 pb-2">
@@ -257,7 +223,13 @@ function Layout() {
 
   const location = useLocation();
   const isDarkPage =
-    location.pathname === "/community" || location.pathname === "/ngo"||location.pathname === "/shop-products"||location.pathname==="/upskill"||location.pathname==="/sell-products"||location.pathname==="/jobs"||location.pathname==="/resume";
+    location.pathname === "/community" ||
+    location.pathname === "/ngo" ||
+    location.pathname === "/shop-products" ||
+    location.pathname === "/upskill" ||
+    location.pathname === "/sell-products" ||
+    location.pathname === "/jobs" ||
+    location.pathname === "/resume";
 
   const homeContent = (
     <section className="relative z-10 flex flex-col items-center text-center px-6 pt-32 pb-40">
@@ -276,7 +248,14 @@ function Layout() {
       </p>
 
       <div className="flex flex-col sm:flex-row gap-4 mt-12">
-        <button className="liquid-glass rounded-full px-10 py-4">
+        {/* ✅ UPDATED: Clicking 'Get Started' opens the Login/Signup modal */}
+        <button 
+          onClick={() => {
+            setTab("signup");
+            setOpen(true);
+          }}
+          className="liquid-glass rounded-full px-10 py-4"
+        >
           Get Started
         </button>
         <Link
@@ -309,18 +288,19 @@ function Layout() {
       {/* NAVBAR */}
       <nav className="relative z-20 flex items-center justify-between px-8 py-6 max-w-7xl mx-auto">
 
-        {/* Logo */}
-        <div
-          className="text-3xl tracking-tight"
+        {/* ✅ UPDATED: Logo wrapped in Link to land back to home */}
+        <Link
+          to="/"
+          className="text-3xl tracking-tight cursor-pointer"
           style={{ fontFamily: "'Instrument Serif', serif" }}
         >
           EmpowerAble<sup className="text-xs">®</sup>
-        </div>
+        </Link>
 
         {/* Nav Links */}
         <div className="hidden md:flex items-center gap-10 text-[15px] font-medium">
 
-          {/* Home — no dropdown */}
+          {/* Home */}
           <NavLink
             to="/"
             className={({ isActive }) =>
@@ -482,7 +462,7 @@ function Layout() {
             <DropdownPanel items={NAV_DROPDOWNS.Learn} footerLabel="View all courses" />
           </div>
 
-          {/* Community — no dropdown */}
+          {/* Community */}
           <NavLink
             to="/community"
             className={({ isActive }) =>
@@ -512,7 +492,10 @@ function Layout() {
 
         {/* Login */}
         <button
-          onClick={() => setOpen(true)}
+          onClick={() => {
+            setTab("login");
+            setOpen(true);
+          }}
           className="liquid-glass rounded-full px-6 py-2.5"
         >
           Login
@@ -527,8 +510,8 @@ function Layout() {
         <Route path="/upskill" element={<Upskill />} />
         <Route path="/shop-products" element={<ShopProducts />} />
         <Route path="/sell-products" element={<SellProducts />} />
-        <Route path="/jobs" element={<Jobs/>} />
-        <Route path="/resume" element={<PostResume/>} />
+        <Route path="/jobs" element={<Jobs />} />
+        <Route path="/resume" element={<PostResume />} />
       </Routes>
 
       {/* LOGIN MODAL */}
@@ -627,6 +610,10 @@ function Layout() {
           </div>
         </div>
       )}
+
+      {/* ✅ CHATBOT — fixed bottom-right, renders on every page */}
+      <ChatBotWidget />
+
     </div>
   );
 }
@@ -638,4 +625,3 @@ export default function App() {
     </BrowserRouter>
   );
 }
-
