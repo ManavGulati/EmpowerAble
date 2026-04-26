@@ -3,24 +3,24 @@ import { useState, useEffect, useRef } from "react";
 const CATEGORIES = ["All", "Visual", "Hearing", "Mobility", "Cognitive", "Mental Health", "Chronic Illness"];
 
 const FEATURED = [
-  { id: 1, name: "BlindTech Builders", category: "Visual", members: 12400, online: 342, desc: "Visually impaired devs, designers & tech enthusiasts. Assistive tools, career paths, and pure innovation.", emoji: "👁️", gradient: "linear-gradient(135deg,#4f46e5,#7c3aed,#1e1b4b)", accent: "#7c3aed", joined: false },
-  { id: 2, name: "DeafConnect Hub", category: "Hearing", members: 28900, online: 891, desc: "The largest deaf & HoH community online. Sign language, captioning tools, advocacy, and joyful culture.", emoji: "🤲", gradient: "linear-gradient(135deg,#0e7490,#0891b2,#083344)", accent: "#0891b2", joined: false },
-  { id: 3, name: "Wheelchair Warriors", category: "Mobility", members: 9700, online: 214, desc: "Travel hacks, accessible venue reviews, adaptive sports, and daily life wins for wheelchair users.", emoji: "♿", gradient: "linear-gradient(135deg,#be123c,#e11d48,#4c0519)", accent: "#e11d48", joined: false },
+  { id: 1, name: "VisionTech Collective", category: "Visual", members: 12400, online: 342, desc: "Visually impaired devs, designers & tech enthusiasts. Assistive tools, career paths, and pure innovation.", emoji: "👁️", gradient: "linear-gradient(135deg,#4f46e5,#7c3aed,#1e1b4b)", accent: "#7c3aed", joined: false },
+  { id: 2, name: "Hearing Access Hub", category: "Hearing", members: 28900, online: 891, desc: "The largest deaf & HoH community online. Sign language, captioning tools, advocacy, and joyful culture.", emoji: "🤲", gradient: "linear-gradient(135deg,#0e7490,#0891b2,#083344)", accent: "#0891b2", joined: false },
+  { id: 3, name: "Mobility Access Network", category: "Mobility", members: 9700, online: 214, desc: "Travel hacks, accessible venue reviews, adaptive sports, and daily life wins for wheelchair users.", emoji: "♿", gradient: "linear-gradient(135deg,#be123c,#e11d48,#4c0519)", accent: "#e11d48", joined: false },
 ];
 
 const COMMUNITIES = [
-  { id: 4,  name: "ADHD Focus Zone",        category: "Cognitive",        members: 31200, online: 1024, desc: "Productivity systems & shame-free support for ADHD brains.", emoji: "⚡", joined: false },
-  { id: 5,  name: "Autism Alliance",         category: "Cognitive",        members: 44500, online: 1532, desc: "Celebrating neurodiversity — late-diagnosed to parents, all welcome.", emoji: "🌈", joined: false },
-  { id: 6,  name: "Chronic Pain Warriors",   category: "Chronic Illness",  members: 19800, online: 673,  desc: "Fibromyalgia, EDS, CRPS. Real talk about pain management and hope.", emoji: "💪", joined: false },
-  { id: 7,  name: "Low Vision Lounge",       category: "Visual",           members: 7200,  online: 189,  desc: "Magnification tools, reading tips, and emotional support.", emoji: "🔍", joined: false },
-  { id: 8,  name: "SpeechPath Connect",      category: "Cognitive",        members: 5400,  online: 98,   desc: "AAC devices and therapy resources for speech & language differences.", emoji: "🗣️", joined: false },
-  { id: 9,  name: "Anxiety & Disability",    category: "Mental Health",    members: 22300, online: 788,  desc: "Navigating disability with anxiety. Gentle, non-judgmental conversations.", emoji: "🌿", joined: false },
-  { id: 10, name: "Deaf Sports League",      category: "Hearing",          members: 8100,  online: 201,  desc: "Deaflympics fans, local deaf sports clubs, all levels welcome.", emoji: "🏅", joined: false },
-  { id: 11, name: "Mobility & Fitness",      category: "Mobility",         members: 14600, online: 430,  desc: "Adaptive fitness, seated yoga, wheelchair sports and beyond.", emoji: "🏋️", joined: false },
-  { id: 12, name: "Invisible Illness Circle",category: "Chronic Illness",  members: 37000, online: 1102, desc: "For those whose disabilities aren't always visible. Solidarity here.", emoji: "🫧", joined: false },
-  { id: 13, name: "PTSD Recovery Space",     category: "Mental Health",    members: 16700, online: 511,  desc: "Trauma-informed, peer-led support for disability-related PTSD.", emoji: "🕊️", joined: false },
-  { id: 14, name: "Dyslexia Decoded",        category: "Cognitive",        members: 11200, online: 345,  desc: "Tools, fonts and strategies for dyslexic learners and professionals.", emoji: "📚", joined: false },
-  { id: 15, name: "Limb Difference Pride",   category: "Mobility",         members: 6800,  online: 176,  desc: "Amputees sharing life, prosthetics, and pure resilience.", emoji: "🦾", joined: false },
+  { id: 4,  name: "ADHD Support Space",         category: "Cognitive",        members: 31200, online: 1024, desc: "Productivity systems & shame-free support for ADHD brains.", emoji: "⚡", joined: false },
+  { id: 5,  name: "Autism Community Network",  category: "Cognitive",        members: 44500, online: 1532, desc: "Celebrating neurodiversity — late-diagnosed to parents, all welcome.", emoji: "🌈", joined: false },
+  { id: 6,  name: "Chronic Pain Support Circle", category: "Chronic Illness",  members: 19800, online: 673,  desc: "Fibromyalgia, EDS, CRPS. Real talk about pain management and hope.", emoji: "💪", joined: false },
+  { id: 7,  name: "Low Vision Community",      category: "Visual",           members: 7200,  online: 189,  desc: "Magnification tools, reading tips, and emotional support.", emoji: "🔍", joined: false },
+  { id: 8,  name: "Speech & Communication Hub",category: "Cognitive",        members: 5400,  online: 98,   desc: "AAC devices and therapy resources for speech & language differences.", emoji: "🗣️", joined: false },
+  { id: 9,  name: "Mental Wellness & Disability", category: "Mental Health",    members: 22300, online: 788,  desc: "Navigating disability with anxiety. Gentle, non-judgmental conversations.", emoji: "🌿", joined: false },
+  { id: 10, name: "Deaf Sports Community",     category: "Hearing",          members: 8100,  online: 201,  desc: "Deaflympics fans, local deaf sports clubs, all levels welcome.", emoji: "🏅", joined: false },
+  { id: 11, name: "Adaptive Fitness Network", category: "Mobility",         members: 14600, online: 430,  desc: "Adaptive fitness, seated yoga, wheelchair sports and beyond.", emoji: "🏋️", joined: false },
+  { id: 12, name: "Invisible Conditions Network", category: "Chronic Illness",  members: 37000, online: 1102, desc: "For those whose disabilities aren't always visible. Solidarity here.", emoji: "🫧", joined: false },
+  { id: 13, name: "Trauma Support Space",     category: "Mental Health",    members: 16700, online: 511,  desc: "Trauma-informed, peer-led support for disability-related PTSD.", emoji: "🕊️", joined: false },
+  { id: 14, name: "Dyslexia Support Network", category: "Cognitive",        members: 11200, online: 345,  desc: "Tools, fonts and strategies for dyslexic learners and professionals.", emoji: "📚", joined: false },
+  { id: 15, name: "Limb Difference Community",category: "Mobility",         members: 6800,  online: 176,  desc: "Amputees sharing life, prosthetics, and pure resilience.", emoji: "🦾", joined: false },
 ];
 
 const CAT_COLORS = {

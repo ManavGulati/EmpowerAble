@@ -539,7 +539,7 @@ function AIRecommendationsScreen({ merged, onAccept, onSubmitAnyway }) {
     const c = cols[rec.type];
     return (
       <div style={{ borderRadius: 14, padding: "18px 20px",
-        background: c.bg, border: `1px solid ${c.border}`, backdropFilter: "blur(10px)" }}>
+        background: c.bg, border: `1px solid ${c.border}` }}>
         <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
           <div style={{ width: 38, height: 38, borderRadius: 10, flexShrink: 0, background: c.iconBg,
             display: "flex", alignItems: "center", justifyContent: "center", fontSize: 17 }}>{rec.icon}</div>
@@ -821,7 +821,7 @@ export default function PostResumePage() {
 
             {/* ── LEFT SIDEBAR ── */}
             <div style={{ position:"sticky", top:100, height:"fit-content" }}>
-              <div style={{ borderRadius:16, padding:"20px", marginBottom:16, background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.07)", backdropFilter:"blur(12px)" }}>
+              <div style={{ borderRadius:16, padding:"20px", marginBottom:16, background:"#080f20", border:"1px solid rgba(255,255,255,0.07)" }}>
                 <div style={{ fontSize:11, color:"rgba(255,255,255,0.3)", fontFamily:"system-ui,sans-serif", letterSpacing:"0.1em", textTransform:"uppercase", marginBottom:16 }}>Your Progress</div>
                 {STEPS.map(s => {
                   const done   = s.id < step;
@@ -843,7 +843,7 @@ export default function PostResumePage() {
                   );
                 })}
               </div>
-              <div style={{ borderRadius:14, padding:"18px 20px", background:"linear-gradient(135deg,rgba(124,58,237,0.1) 0%,rgba(8,145,178,0.06) 100%)", border:"1px solid rgba(124,58,237,0.18)", backdropFilter:"blur(12px)" }}>
+              <div style={{ borderRadius:14, padding:"18px 20px", background:"linear-gradient(135deg,rgba(124,58,237,0.1) 0%,rgba(8,145,178,0.06) 100%)", border:"1px solid rgba(124,58,237,0.18)" }}>
                 <div style={{ fontSize:12, fontWeight:800, color:"#a78bfa", fontFamily:"system-ui,sans-serif", marginBottom:10 }}>💡 Quick Tips</div>
                 {["Use a professional photo if possible","Add at least 5 skills to improve matches","UDID certificate doubles your interview calls","Remote roles get 3× more PwD applicants"].map((t,i) => (
                   <div key={i} style={{ display:"flex", gap:8, marginBottom:8, alignItems:"flex-start" }}>
@@ -857,7 +857,7 @@ export default function PostResumePage() {
             {/* ── RIGHT FORM PANEL ── */}
             <div>
               <StepBar current={step} />
-              <div className="step-in" key={step} style={{ borderRadius:20, padding:"36px 40px", background:"rgba(255,255,255,0.025)", border:"1px solid rgba(255,255,255,0.08)", backdropFilter:"blur(16px)", marginBottom:20 }}>
+              <div className="step-in" key={step} style={{ borderRadius:20, padding:"36px 40px", background:"#080f20", border:"1px solid rgba(255,255,255,0.08)", marginBottom:20 }}>
                 {step === 1 && <Step1 data={personal}   setData={setPersonal}  />}
                 {step === 2 && <Step2 data={skillsData}  setData={setSkillsData}/>}
                 {step === 3 && <Step3 data={disData}     setData={setDisData}   />}
@@ -866,7 +866,7 @@ export default function PostResumePage() {
               </div>
 
               {/* NAV BUTTONS */}
-              <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+              <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", position:"relative", zIndex:2 }}>
                 {step > 1 ? (
                   <button onClick={goBack}
                     style={{ padding:"12px 28px", borderRadius:100, fontSize:13, fontWeight:800, fontFamily:"system-ui,sans-serif", cursor:"pointer", background:"transparent", color:"rgba(255,255,255,0.5)", border:"1px solid rgba(255,255,255,0.15)", transition:"all 0.2s" }}
